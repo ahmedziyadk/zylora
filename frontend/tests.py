@@ -48,14 +48,48 @@ class FrontendAuthAndPagesTest(TestCase):
         self.assertEqual(res_post.status_code, 200)
         self.assertTrue(ContactMessage.objects.filter(email='jane@example.com').exists())
 
-    def test_homepage_has_single_login_button(self):
+    def test_visitor_navigation(self):
         response = self.client.get(reverse('frontend:index'))
         self.assertEqual(response.status_code, 200)
-        # Check single Login button exists
-        self.assertContains(response, f'<div class="login_button"><a href="{reverse("frontend:login")}">Login</a></div>', html=False)
-        # Check old separate Student Login and Register buttons are removed
-        self.assertNotContains(response, 'Student Login')
-        self.assertNotContains(response, f'<a href="{reverse("frontend:register")}">Register</a>')
+        self.assertContains(response, f'<div class="login_button"><a href="{reverse("frontend:login")}">Login</a></div>')
+        self.assertContains(response, f'<div class="login_button ml-2"><a href="{reverse("frontend:register")}">Register</a></div>')
+        self.assertNotContains(response, 'Admin Panel')
+        self.assertNotContains(response, 'Admin Dashboard')
+        self.assertNotContains(response, 'My Learning')
+
+    def test_student_navigation_strictly_hides_admin_links(self):
+        student = User.objects.create_user(username='nav_student', password='password123', first_name='Ziyad')
+        self.client.login(username='nav_student', password='password123')
+        response = self.client.get(reverse('frontend:index'))
+        self.assertEqual(response.status_code, 200)
+        # Student options present
+        self.assertContains(response, 'My Learning')
+        self.assertContains(response, 'My Profile')
+        self.assertContains(response, 'Logout')
+        self.assertContains(response, 'Ziyad')
+        # Admin options MUST NOT be displayed
+        self.assertNotContains(response, 'Admin Panel')
+        self.assertNotContains(response, 'Admin Dashboard')
+        self.assertNotContains(response, reverse('backend:dashboard'))
+        self.assertNotContains(response, reverse('backend:admin_login'))
+        # No visitor login/register button
+        self.assertNotContains(response, f'<a href="{reverse("frontend:login")}">Login</a>')
+
+    def test_admin_navigation_displays_admin_links_and_hides_student_options(self):
+        admin = User.objects.create_superuser(username='nav_admin', password='password123', first_name='SuperAdmin')
+        self.client.login(username='nav_admin', password='password123')
+        response = self.client.get(reverse('frontend:index'))
+        self.assertEqual(response.status_code, 200)
+        # Admin options present
+        self.assertContains(response, 'Admin Panel')
+        self.assertContains(response, 'Admin Dashboard')
+        self.assertContains(response, 'Logout')
+        self.assertContains(response, 'SuperAdmin (Admin)')
+        # Student specific options absent
+        self.assertNotContains(response, 'My Learning')
+        self.assertNotContains(response, 'My Profile')
+        # No visitor login/register button
+        self.assertNotContains(response, f'<a href="{reverse("frontend:login")}">Login</a>')
 
     def test_login_page_renders_unified_portal(self):
         response = self.client.get(reverse('frontend:login'))

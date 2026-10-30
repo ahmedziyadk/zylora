@@ -45,23 +45,33 @@
 									<div class="top_bar_login ml-auto">
 										{% if request.user.is_authenticated %}
 										<div class="d-flex flex-row align-items-center">
+											{% if not request.user.is_staff and not request.user.is_superuser %}
+											<!-- Student Top Controls -->
 											<a href="{% url 'frontend:dashboard' %}"
 												style="color: #ffffff; font-size: 13px; font-weight: 500; margin-right: 15px;">
 												<i class="fa fa-user-circle mr-1" style="color: #14bdee;"></i> {{ request.user.first_name|default:request.user.username }}
 											</a>
-											{% if request.user.is_staff %}
+											<div class="login_button mr-2"><a
+													href="{% url 'frontend:dashboard' %}">My Profile</a></div>
+											<div class="login_button"><a
+													href="{% url 'frontend:logout' %}">Logout</a></div>
+											{% else %}
+											<!-- Admin / Staff Top Controls -->
+											<span style="color: #ffffff; font-size: 13px; font-weight: 500; margin-right: 15px;">
+												<i class="fa fa-shield mr-1" style="color: #38bdf8;"></i> {{ request.user.first_name|default:request.user.username }} (Admin)
+											</span>
 											<div class="login_button mr-2"><a href="{% url 'backend:dashboard' %}"
 													style="background: #0f172a; border: 1px solid #38bdf8; color: #38bdf8;"><i
 														class="fa fa-shield mr-1"></i> Admin Panel</a></div>
-											{% endif %}
 											<div class="login_button"><a
-													href="{% url 'frontend:dashboard' %}">Dashboard</a></div>
-											<div class="login_button ml-2"><a
 													href="{% url 'frontend:logout' %}">Logout</a></div>
+											{% endif %}
 										</div>
 										{% else %}
+										<!-- Visitor Top Controls -->
 										<div class="d-flex flex-row align-items-center">
 											<div class="login_button"><a href="{% url 'frontend:login' %}">Login</a></div>
+											<div class="login_button ml-2"><a href="{% url 'frontend:register' %}">Register</a></div>
 										</div>
 										{% endif %}
 									</div>
@@ -98,10 +108,17 @@
 											<a href="{% url 'frontend:courses' %}">Courses</a>
 										</li>
 										{% if request.user.is_authenticated %}
-										<li
-											class="{% if request.resolver_match.url_name in 'dashboard,lesson_learning' %}active{% endif %}">
-											<a href="{% url 'frontend:dashboard' %}">My Learning</a>
-										</li>
+											{% if not request.user.is_staff and not request.user.is_superuser %}
+											<li
+												class="{% if request.resolver_match.url_name in 'dashboard,lesson_learning' %}active{% endif %}">
+												<a href="{% url 'frontend:dashboard' %}">My Learning</a>
+											</li>
+											{% else %}
+											<li
+												class="{% if request.resolver_match.app_name == 'backend' %}active{% endif %}">
+												<a href="{% url 'backend:dashboard' %}">Admin Dashboard</a>
+											</li>
+											{% endif %}
 										{% endif %}
 										<li
 											class="{% if request.resolver_match.url_name in 'blog,blog_single' %}active{% endif %}">
@@ -168,19 +185,21 @@
 					<li class="menu_mm"><a href="{% url 'frontend:index' %}">Home</a></li>
 					<li class="menu_mm"><a href="{% url 'frontend:about' %}">About</a></li>
 					<li class="menu_mm"><a href="{% url 'frontend:courses' %}">Courses</a></li>
+					{% if request.user.is_authenticated %}
+						{% if not request.user.is_staff and not request.user.is_superuser %}
+							<li class="menu_mm"><a href="{% url 'frontend:dashboard' %}"><i class="fa fa-graduation-cap"></i> My Learning</a></li>
+							<li class="menu_mm"><a href="{% url 'frontend:dashboard' %}"><i class="fa fa-user-circle"></i> My Profile ({{ request.user.first_name|default:request.user.username }})</a></li>
+						{% else %}
+							<li class="menu_mm"><a href="{% url 'backend:dashboard' %}" style="color: #14bdee;"><i class="fa fa-shield"></i> Admin Panel</a></li>
+						{% endif %}
+					{% endif %}
 					<li class="menu_mm"><a href="{% url 'frontend:blog' %}">Blog</a></li>
 					<li class="menu_mm"><a href="{% url 'frontend:contact' %}">Contact</a></li>
 					{% if request.user.is_authenticated %}
-					{% if request.user.is_staff %}
-					<li class="menu_mm"><a href="{% url 'backend:dashboard' %}" style="color: #14bdee;"><i
-								class="fa fa-shield"></i> Admin Panel</a></li>
-					{% endif %}
-					<li class="menu_mm"><a href="{% url 'frontend:dashboard' %}"><i class="fa fa-user-circle"></i>
-							Dashboard ({{ request.user.first_name|default:request.user.username }})</a></li>
-					<li class="menu_mm"><a href="{% url 'frontend:logout' %}"><i class="fa fa-sign-out"></i> Logout</a>
-					</li>
+					<li class="menu_mm"><a href="{% url 'frontend:logout' %}"><i class="fa fa-sign-out"></i> Logout</a></li>
 					{% else %}
 					<li class="menu_mm"><a href="{% url 'frontend:login' %}"><i class="fa fa-sign-in"></i> Login</a></li>
+					<li class="menu_mm"><a href="{% url 'frontend:register' %}"><i class="fa fa-user-plus"></i> Register</a></li>
 					{% endif %}
 				</ul>
 			</nav>
@@ -273,8 +292,10 @@
 												<li><a href="{% url 'frontend:courses' %}">All Courses</a></li>
 												<li><a href="{% url 'frontend:blog' %}">Articles & Updates</a></li>
 												<li><a href="{% url 'frontend:contact' %}">Contact Us</a></li>
-												<li><a href="{% url 'backend:admin_login' %}"><i
-															class="fa fa-lock mr-1"></i> Admin Portal</a></li>
+												{% if request.user.is_staff or request.user.is_superuser %}
+												<li><a href="{% url 'backend:dashboard' %}"><i
+															class="fa fa-shield mr-1"></i> Admin Panel</a></li>
+												{% endif %}
 											</ul>
 										</div>
 									</div>

@@ -325,6 +325,8 @@ def student_login(request):
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser:
             return redirect('backend:dashboard')
+        if request.GET.get('next') and '/admin' in request.GET.get('next'):
+            messages.error(request, "Access denied. Administrator privileges required.")
         return redirect('frontend:dashboard')
 
     if request.method == 'POST':
