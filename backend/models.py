@@ -102,6 +102,119 @@ class Lesson(models.Model):
     def __str__(self):
         return f"{self.course.title} - L{self.order}: {self.title}"
 
+    def get_embed_video_url(self):
+        """
+        Safely converts YouTube (watch, short, shorts, embed), Vimeo,
+        and Dailymotion URLs into valid, embeddable iframe URLs.
+        Returns empty string if direct video or unsupported.
+        """
+        if not self.video_url:
+            return ""
+        
+        raw_url = self.video_url.strip()
+        if not raw_url:
+            return ""
+
+        from urllib.parse import urlparse, parse_qs
+
+        # Direct video files are handled separately via HTML5 video tag
+        clean_lower = raw_url.lower().split('?')[0]
+        if clean_lower.endswith(('.mp4', '.webm', '.ogg', '.mov', '.m4v', '.m3u8')):
+            return ""
+
+        # YouTube Watch URL: https://www.youtube.com/watch?v=VIDEO_ID
+        if 'youtube.com/watch' in raw_url:
+            try:
+                parsed = urlparse(raw_url)
+                params = parse_qs(parsed.query)
+                video_id = params.get('v')
+                if video_id and video_id[0]:
+                    return f"https://www.youtube.com/embed/{video_id[0]}"
+            except Exception:
+                pass
+
+        # YouTube Short URL: https://youtu.be/VIDEO_ID or https://youtu.be/VIDEO_ID?si=...
+        elif 'youtu.be/' in raw_url:
+            try:
+                parsed = urlparse(raw_url)
+                video_id = parsed.path.strip('/')
+                if video_id:
+                    return f"https://www.youtube.com/embed/{video_id}"
+            except Exception:
+                pass
+
+        # YouTube Shorts: https://www.youtube.com/shorts/VIDEO_ID
+        elif 'youtube.com/shorts/' in raw_url:
+            try:
+                parsed = urlparse(raw_url)
+                parts = parsed.path.split('/shorts/')
+                if len(parts) > 1:
+                    video_id = parts[1].strip('/')
+                    if video_id:
+                        return f"https://www.youtube.com/embed/{video_id}"
+            except Exception:
+                pass
+
+        # Already YouTube embed: https://www.youtube.com/embed/VIDEO_ID
+        elif 'youtube.com/embed/' in raw_url or 'youtube-nocookie.com/embed/' in raw_url:
+            return raw_url
+
+        # Vimeo Standard: https://vimeo.com/123456789
+        elif 'vimeo.com/' in raw_url and 'player.vimeo.com' not in raw_url:
+            try:
+                parsed = urlparse(raw_url)
+                vimeo_id = parsed.path.strip('/')
+                if vimeo_id.isdigit():
+                    return f"https://player.vimeo.com/video/{vimeo_id}"
+            except Exception:
+                pass
+
+        # Already Vimeo embed: https://player.vimeo.com/video/123456789
+        elif 'player.vimeo.com/video/' in raw_url:
+            return raw_url
+
+        # Dailymotion: https://dai.ly/x7tgad0 or https://www.dailymotion.com/video/x7tgad0
+        elif 'dai.ly/' in raw_url:
+            try:
+                parsed = urlparse(raw_url)
+                dm_id = parsed.path.strip('/')
+                if dm_id:
+                    return f"https://www.dailymotion.com/embed/video/{dm_id}"
+            except Exception:
+                pass
+        elif 'dailymotion.com/video/' in raw_url:
+            try:
+                parsed = urlparse(raw_url)
+                parts = parsed.path.split('/video/')
+                if len(parts) > 1:
+                    dm_id = parts[1].strip('/')
+                    if dm_id:
+                        return f"https://www.dailymotion.com/embed/video/{dm_id}"
+            except Exception:
+                pass
+
+        # Any URL that is already formatted as an iframe embed endpoint
+        elif '/embed/' in raw_url:
+            return raw_url
+
+        return ""
+
+    @property
+    def is_direct_video(self):
+        """Returns True if the video_url points to a standard direct video file."""
+        if not self.video_url:
+            return False
+        clean_url = self.video_url.strip().lower().split('?')[0]
+        return clean_url.endswith(('.mp4', '.webm', '.ogg', '.mov', '.m4v', '.m3u8'))
+
+    @property
+    def embed_video_url(self):
+        return self.get_embed_video_url()
+
+    @property
+    def has_valid_video(self):
+        return bool(self.is_direct_video or self.embed_video_url)
+
 
 class Enrollment(models.Model):
     STATUS_CHOICES = [

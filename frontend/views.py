@@ -187,25 +187,7 @@ def lesson_learning(request, slug, lesson_id=None):
         messages.warning(request, "No lessons have been published for this course yet.")
         return redirect('frontend:course_detail', slug=course.slug)
 
-    if lesson_id:
-        lesson = get_object_or_404(Lesson, id=lesson_id, course=course)
-    else:
-        lesson = lessons.first()
-
-    # Authorization verification
-    if not lesson.is_preview:
-        if not request.user.is_authenticated:
-            messages.info(request, "Please log in to access this lesson.")
-            return redirect(f"{reverse('frontend:login')}?next={request.path}")
-
-        is_enrolled = Enrollment.objects.filter(user=request.user, course=course).exists()
-        is_staff_or_instructor = request.user.is_staff or (course.instructor == request.user)
-        if not is_enrolled and not is_staff_or_instructor:
-            messages.error(request, "You must enroll in this course to access this lesson.")
-            return redirect('frontend:course_detail', slug=course.slug)
-    else:
-        is_enrolled = request.user.is_authenticated and Enrollment.objects.filter(user=request.user, course=course).exists()
-
+    is_enrolled = request.user.is_authenticated and Enrollment.objects.filter(user=request.user, course=course).exists()
     enrollment = None
     completed_lesson_ids = set()
     if request.user.is_authenticated and is_enrolled:
@@ -217,6 +199,27 @@ def lesson_learning(request, slug, lesson_id=None):
                 is_completed=True
             ).values_list('lesson_id', flat=True)
         )
+
+    if lesson_id:
+        lesson = get_object_or_404(Lesson, id=lesson_id, course=course)
+    else:
+        # Resume at first incomplete lesson if student is enrolled, else first lesson
+        if is_enrolled and completed_lesson_ids:
+            first_incomplete = lessons.exclude(id__in=completed_lesson_ids).first()
+            lesson = first_incomplete or lessons.first()
+        else:
+            lesson = lessons.first()
+
+    # Authorization verification
+    if not lesson.is_preview:
+        if not request.user.is_authenticated:
+            messages.info(request, "Please log in to access this lesson.")
+            return redirect(f"{reverse('frontend:login')}?next={request.path}")
+
+        is_staff_or_instructor = request.user.is_staff or (course.instructor == request.user)
+        if not is_enrolled and not is_staff_or_instructor:
+            messages.error(request, "You must enroll in this course to access this lesson.")
+            return redirect('frontend:course_detail', slug=course.slug)
 
     is_completed = lesson.id in completed_lesson_ids
 

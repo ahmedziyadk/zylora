@@ -4,6 +4,8 @@
 {% block title %}{{ lesson.title }} - {{ course.title }} | Zylora LMS{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/courses.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/courses_responsive.css' %}">
 <style>
 	.lesson_learning_section {
 		background: #f8fafc;
@@ -165,22 +167,45 @@
 			<div class="col-lg-8">
 				
 				<!-- Video Player / Embed -->
-				{% if lesson.video_url %}
+				{% if lesson.is_direct_video %}
 				<div class="video_player_container">
-					{% if "youtube.com" in lesson.video_url or "youtu.be" in lesson.video_url or "vimeo.com" in lesson.video_url %}
-					<iframe src="{{ lesson.video_url }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-					{% else %}
-					<video controls>
-						<source src="{{ lesson.video_url }}" type="video/mp4">
-						Your browser does not support the video tag.
+					<video controls playsinline controlsList="nodownload" preload="metadata" style="background:#000;">
+						<source src="{{ lesson.video_url }}">
+						Your browser does not support HTML5 video playback.
 					</video>
-					{% endif %}
+				</div>
+				{% elif lesson.embed_video_url %}
+				<div class="video_player_container">
+					<iframe src="{{ lesson.embed_video_url }}" 
+					        title="{{ lesson.title }}" 
+					        frameborder="0" 
+					        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+					        allowfullscreen></iframe>
+				</div>
+				{% elif lesson.video_url %}
+				<!-- External / Unsupported Video URL Notice -->
+				<div class="p-4 mb-4 rounded border shadow-sm" style="background: #fffbeb; border-color: #fef3c7; color: #92400e;">
+					<div class="d-flex align-items-center mb-2">
+						<i class="fa fa-exclamation-triangle fa-2x mr-3 text-warning"></i>
+						<div>
+							<h5 class="font-weight-bold mb-1" style="color: #92400e;">External Video Resource</h5>
+							<p class="small mb-0" style="color: #78350f;">This lesson references an external resource that cannot be embedded directly in an iframe. You may open the video in a new tab or review the lecture notes below.</p>
+						</div>
+					</div>
+					<div class="mt-3">
+						<a href="{{ lesson.video_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-warning btn-sm font-weight-bold">
+							<i class="fa fa-external-link mr-1"></i> Open Video Link
+						</a>
+					</div>
 				</div>
 				{% else %}
-				<div class="p-4 mb-4 rounded border text-center" style="background: #e0f2fe; color: #0369a1;">
-					<i class="fa fa-file-text-o fa-3x mb-2"></i>
-					<h5 class="font-weight-bold">Interactive Reading & Notes Module</h5>
-					<p class="small mb-0">Study the comprehensive learning notes below, complete the assigned exercises, and click <strong>Mark as Completed</strong> to track your progress.</p>
+				<!-- Notes / Reading Only Module -->
+				<div class="p-4 mb-4 rounded border text-center shadow-sm" style="background: #f0f9ff; border-color: #bae6fd; color: #0369a1;">
+					<div style="width: 56px; height: 56px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 12px;">
+						<i class="fa fa-book"></i>
+					</div>
+					<h5 class="font-weight-bold mb-1" style="color: #0369a1;">Interactive Reading &amp; Lecture Notes Module</h5>
+					<p class="small mb-0" style="color: #0c4a6e;">Study the comprehensive curriculum notes below, complete the exercises, and click <strong>Mark as Completed</strong> to track your progress.</p>
 				</div>
 				{% endif %}
 
@@ -312,4 +337,8 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'frontend/js/courses.js' %}"></script>
 {% endblock %}

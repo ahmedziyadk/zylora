@@ -608,3 +608,199 @@ class CourseAndLMSWorkflowTest(TestCase):
         self.assertContains(res_post, 'Check Your Email')
 
 
+class LessonLearningWorkflowTests(TestCase):
+    def setUp(self):
+        self.category = Category.objects.create(name='Design & AI', slug='design-ai')
+        self.instructor = User.objects.create_user(
+            username='prof_smith',
+            email='smith@zylora.com',
+            password='smithpass123'
+        )
+        self.course = Course.objects.create(
+            title='Graphic Designing & AI',
+            slug='graphic-designing-ai',
+            category=self.category,
+            instructor=self.instructor,
+            instructor_name='Professor Smith',
+            price=49.99,
+            is_published=True
+        )
+        # Lesson 1: YouTube short URL (preview)
+        self.lesson1 = Lesson.objects.create(
+            course=self.course,
+            title='Photoshop Mastery',
+            video_url='https://youtu.be/OKkWRpoIFuw?si=sampleSiTag',
+            order=1,
+            duration_minutes=25,
+            content='Master Photoshop selections, layers, and masking.',
+            is_preview=True
+        )
+        # Lesson 2: Direct MP4 video (enrolled only)
+        self.lesson2 = Lesson.objects.create(
+            course=self.course,
+            title='Adobe Premiere Pro',
+            video_url='https://example.com/videos/premiere.mp4',
+            order=2,
+            duration_minutes=40,
+            content='Timeline editing, color grading, and video transitions.',
+            is_preview=False
+        )
+        # Lesson 3: Notes-only lesson (enrolled only)
+        self.lesson3 = Lesson.objects.create(
+            course=self.course,
+            title='Design Theory & Ethics',
+            video_url='',
+            order=3,
+            duration_minutes=15,
+            content='Typography principles, color harmonies, and AI copyright.',
+            is_preview=False
+        )
+        # Lesson 4: External non-embeddable link
+        self.lesson4 = Lesson.objects.create(
+            course=self.course,
+            title='External Portfolio Lab',
+            video_url='https://externallab.com/interactive-workshop',
+            order=4,
+            duration_minutes=30,
+            content='External design laboratory walkthrough.',
+            is_preview=False
+        )
+
+        self.student = User.objects.create_user(
+            username='design_student',
+            email='student@zylora.com',
+            password='studentpass123'
+        )
+        self.enrollment = Enrollment.objects.create(
+            user=self.student,
+            course=self.course,
+            progress=0,
+            status='Active'
+        )
+
+    def test_lesson_learning_page_renders_with_assets_and_data(self):
+        self.client.login(username='design_student', password='studentpass123')
+        url = reverse('frontend:lesson_learning', kwargs={'slug': self.course.slug, 'lesson_id': self.lesson1.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        # Verify static CSS and JS are included
+        self.assertContains(response, 'frontend/styles/courses.css')
+        self.assertContains(response, 'frontend/styles/courses_responsive.css')
+        self.assertContains(response, 'frontend/js/courses.js')
+
+        # Verify database-driven course and lesson information
+        self.assertContains(response, 'Graphic Designing &amp; AI')
+        self.assertContains(response, 'Photoshop Mastery')
+        self.assertContains(response, 'Professor Smith')
+        self.assertContains(response, 'Design &amp; AI')
+        self.assertContains(response, 'Lesson #1')
+        self.assertContains(response, 'Course Curriculum')
+        self.assertContains(response, '4 total lessons')
+
+    def test_youtube_url_converts_to_embed_iframe(self):
+        self.client.login(username='design_student', password='studentpass123')
+        url = reverse('frontend:lesson_learning', kwargs={'slug': self.course.slug, 'lesson_id': self.lesson1.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        # Converted YouTube embed URL inside iframe
+        expected_embed = 'https://www.youtube.com/embed/OKkWRpoIFuw'
+        self.assertEqual(self.lesson1.embed_video_url, expected_embed)
+        self.assertContains(response, f'src="{expected_embed}"')
+        self.assertContains(response, '<iframe')
+        self.assertContains(response, 'allowfullscreen')
+
+    def test_direct_video_mp4_renders_html5_player(self):
+        self.client.login(username='design_student', password='studentpass123')
+        url = reverse('frontend:lesson_learning', kwargs={'slug': self.course.slug, 'lesson_id': self.lesson2.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertTrue(self.lesson2.is_direct_video)
+        self.assertContains(response, '<video controls')
+        self.assertContains(response, 'src="https://example.com/videos/premiere.mp4"')
+
+    def test_notes_only_lesson_renders_reading_module(self):
+        self.client.login(username='design_student', password='studentpass123')
+        url = reverse('frontend:lesson_learning', kwargs={'slug': self.course.slug, 'lesson_id': self.lesson3.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertFalse(self.lesson3.has_valid_video)
+        self.assertContains(response, 'Interactive Reading &amp; Lecture Notes Module')
+        self.assertContains(response, 'Typography principles, color harmonies, and AI copyright.')
+
+    def test_external_unsupported_link_renders_safe_external_notice(self):
+        self.client.login(username='design_student', password='studentpass123')
+        url = reverse('frontend:lesson_learning', kwargs={'slug': self.course.slug, 'lesson_id': self.lesson4.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertContains(response, 'External Video Resource')
+        self.assertContains(response, 'Open Video Link')
+        self.assertContains(response, 'https://externallab.com/interactive-workshop')
+
+    def test_lesson_completion_toggle_updates_progress_and_autoadvances(self):
+        self.client.login(username='design_student', password='studentpass123')
+        toggle_url = reverse('frontend:toggle_lesson_completion', kwargs={'slug': self.course.slug, 'lesson_id': self.lesson1.id})
+
+        # Mark Lesson 1 as completed -> should auto advance to Lesson 2
+        response = self.client.post(toggle_url, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        self.enrollment.refresh_from_db()
+        # 1 out of 4 lessons completed = 25%
+        self.assertEqual(self.enrollment.progress, 25)
+        self.assertEqual(self.enrollment.status, 'Active')
+        self.assertContains(response, "marked complete! Progress: 25%")
+
+        # Verify auto-advance redirect was to Lesson 2
+        self.assertContains(response, 'Adobe Premiere Pro')
+
+        # Toggle again to undo completion -> should recalculate to 0%
+        undo_response = self.client.post(toggle_url, follow=True)
+        self.assertEqual(undo_response.status_code, 200)
+        self.enrollment.refresh_from_db()
+        self.assertEqual(self.enrollment.progress, 0)
+        self.assertContains(undo_response, "marked as incomplete")
+
+    def test_course_learn_url_without_lesson_id_resumes_incomplete_lesson(self):
+        self.client.login(username='design_student', password='studentpass123')
+        # Mark Lesson 1 as done
+        LessonProgress.objects.create(student=self.student, lesson=self.lesson1, is_completed=True)
+        self.enrollment.recalculate_progress()
+
+        # Access /courses/<slug>/learn/ without lesson_id
+        url = reverse('frontend:course_learn', kwargs={'slug': self.course.slug})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        # Should resume at Lesson 2 (the first incomplete lesson)
+        self.assertEqual(response.context['lesson'].id, self.lesson2.id)
+        self.assertContains(response, 'Adobe Premiere Pro')
+
+    def test_unenrolled_student_cannot_access_locked_lesson(self):
+        other_user = User.objects.create_user(
+            username='other_student',
+            email='other@zylora.com',
+            password='otherpass123'
+        )
+        self.client.login(username='other_student', password='otherpass123')
+
+        # Lesson 2 is not preview, other_user is not enrolled
+        locked_url = reverse('frontend:lesson_learning', kwargs={'slug': self.course.slug, 'lesson_id': self.lesson2.id})
+        response = self.client.get(locked_url, follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # Redirected to course detail with warning message
+        self.assertContains(response, 'You must enroll in this course to access this lesson.')
+
+        # Lesson 1 is preview -> other_user CAN access
+        preview_url = reverse('frontend:lesson_learning', kwargs={'slug': self.course.slug, 'lesson_id': self.lesson1.id})
+        res_preview = self.client.get(preview_url)
+        self.assertEqual(res_preview.status_code, 200)
+        self.assertContains(res_preview, 'Free Preview Mode')
+
+
+
