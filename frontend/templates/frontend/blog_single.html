@@ -1,0 +1,273 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}Building Scalable Web Architecture with Django & Modern JavaScript - Zylora Blog{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'frontend/plugins/colorbox/colorbox.css' %}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/blog_single.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/blog_single_responsive.css' %}">
+<style>
+	.blog_single_article {
+		background: #ffffff;
+		border-radius: 14px;
+		padding: 40px;
+		box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+		border: 1px solid #f1f5f9;
+	}
+	.blog_quote {
+		background: #f0fdf4;
+		border-left: 4px solid #16a34a;
+		padding: 20px 24px;
+		border-radius: 0 8px 8px 0;
+		margin: 30px 0;
+		font-style: italic;
+		color: #166534;
+	}
+	.tech_callout {
+		background: #f8fafc;
+		border: 1px solid #e2e8f0;
+		border-radius: 8px;
+		padding: 20px;
+		margin: 25px 0;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Home / Breadcrumbs -->
+<div class="home">
+	<div class="breadcrumbs_container">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="breadcrumbs">
+						<ul>
+							<li><a href="{% url 'frontend:index' %}">Home</a></li>
+							<li><a href="{% url 'frontend:blog' %}">Articles</a></li>
+							<li>Building Scalable Web Architecture</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>			
+</div>
+
+<!-- Blog Content Section -->
+<div class="blog">
+	<div class="container">
+		<div class="row">
+
+			<!-- Blog Content -->
+			<div class="col-lg-8">
+				<div class="blog_single_article">
+					<div class="mb-3">
+						<span class="badge badge-info px-3 py-1 font-weight-bold" style="font-size: 12px; border-radius: 4px;">Software Engineering</span>
+					</div>
+
+					<h1 class="blog_title" style="font-size: 32px; font-weight: 700; color: #1e293b; line-height: 1.3; margin-bottom: 16px;">
+						Building Scalable Web Architecture with Django & Modern JavaScript
+					</h1>
+
+					<div class="blog_meta mb-4 pb-3 border-bottom">
+						<ul class="d-flex align-items-center text-muted small pl-0 list-unstyled mb-0">
+							<li class="mr-3"><i class="fa fa-user-circle text-info mr-1"></i> Written by <strong>Zylora Engineering Faculty</strong></li>
+							<li class="mr-3"><i class="fa fa-calendar-o mr-1"></i> October 24, 2026</li>
+							<li><i class="fa fa-clock-o mr-1"></i> 8 min read</li>
+						</ul>
+					</div>
+
+					<div class="blog_image mb-4" style="border-radius: 10px; overflow: hidden;">
+						<img src="{% static 'frontend/images/blog_single.jpg' %}" alt="Web Architecture with Django" style="width: 100%; height: auto;">
+					</div>
+
+					<div class="blog_content_body text-dark" style="line-height: 1.8; font-size: 15px; color: #334155;">
+						<p>When developing a production-ready web platform—such as an Online Learning Management System—architectural decisions made in the initial sprint determine system resilience, database maintainability, and end-user latency under heavy traffic.</p>
+
+						<p>Django's batteries-included philosophy gives teams a rigorous Object-Relational Mapper (ORM), native authentication guards, declarative routing, and parameterized query execution to neutralize SQL injection vulnerabilities out of the box.</p>
+
+						<div class="blog_quote">
+							“Scalability is not simply adding more compute capacity; it is minimizing round-trips to storage through intelligent indexing, relational eager loading, and cleanly separated frontend components.”
+						</div>
+
+						<h3 class="font-weight-bold text-dark mt-4 mb-3" style="font-size: 22px;">1. Conquering the N+1 Query Problem</h3>
+						<p>One of the most frequent performance bottlenecks in web applications arises when looping over related objects in templates. Using <code>select_related</code> for foreign keys and <code>prefetch_related</code> for many-to-many or reverse-foreign-key relationships transforms dozens of sequential queries into an optimized, single-trip query plan.</p>
+
+						<div class="tech_callout">
+							<h6 class="font-weight-bold text-dark mb-2"><i class="fa fa-code text-info mr-2"></i> Clean Queryset Pattern</h6>
+							<pre class="mb-0 text-dark small" style="background: #f1f5f9; padding: 12px; border-radius: 6px;"><code># Optimized query retrieving published courses with categories & lesson counts:
+courses = Course.objects.filter(is_published=True)\
+    .select_related('category', 'instructor')\
+    .annotate(total_lessons=Count('lessons'))</code></pre>
+						</div>
+
+						<h3 class="font-weight-bold text-dark mt-4 mb-3" style="font-size: 22px;">2. Modular Application Decoupling</h3>
+						<p>Structuring the codebase into dedicated apps—such as our <code>backend</code> administration module and <code>frontend</code> student-facing interface—guarantees clear boundaries of concern. Administrative actions (approving instructors, managing categories, tracking platform statistics) run independently from student enrollment flows, session management, and lecture consumption.</p>
+
+						<h3 class="font-weight-bold text-dark mt-4 mb-3" style="font-size: 22px;">3. Responsive Frontend Integration</h3>
+						<p>While the server manages business rules, validation, and permissions, the presentation layer must feel dynamic. By combining Bootstrap's grid system with semantic HTML5 and vanilla JavaScript micro-interactions, we provide responsive study environments across mobile phones, tablets, and desktop workstations without heavy client-side bundle overhead.</p>
+					</div>
+
+					<!-- Tags and Sharing -->
+					<div class="blog_extra mt-5 pt-4 border-top d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-between">
+						<div class="blog_tags mb-3 mb-lg-0">
+							<span class="font-weight-bold mr-2 text-dark">Tags:</span>
+							<a href="{% url 'frontend:courses' %}" class="badge badge-light border text-muted px-2 py-1 mr-1">Django</a>
+							<a href="{% url 'frontend:courses' %}" class="badge badge-light border text-muted px-2 py-1 mr-1">Python</a>
+							<a href="{% url 'frontend:courses' %}" class="badge badge-light border text-muted px-2 py-1 mr-1">Architecture</a>
+							<a href="{% url 'frontend:courses' %}" class="badge badge-light border text-muted px-2 py-1 mr-1">Web Development</a>
+							<a href="{% url 'frontend:courses' %}" class="badge badge-light border text-muted px-2 py-1">LMS</a>
+						</div>
+						<div class="blog_social">
+							<span class="font-weight-bold mr-2 text-dark">Explore Curriculum:</span>
+							<a href="{% url 'frontend:courses' %}" class="btn btn-sm btn-info font-weight-bold" style="border-radius: 6px;">
+								<i class="fa fa-graduation-cap mr-1"></i> View Related Courses
+							</a>
+						</div>
+					</div>
+
+					<!-- Comments Section -->
+					<div class="comments_container mt-5 pt-4 border-top">
+						<div class="d-flex align-items-center justify-content-between mb-4">
+							<h4 class="font-weight-bold text-dark mb-0">Student Discussion (2)</h4>
+							<span class="small text-muted">Community Academic Insights</span>
+						</div>
+
+						<ul class="comments_list list-unstyled pl-0 mb-4">
+							<!-- Comment 1 -->
+							<li class="p-3 mb-3 bg-light rounded border">
+								<div class="d-flex justify-content-between align-items-center mb-2">
+									<div class="font-weight-bold text-dark">
+										<i class="fa fa-user-circle text-info mr-2"></i> Tariq Mansoor
+										<span class="badge badge-info ml-2 small" style="font-size: 10px;">Enrolled Student</span>
+									</div>
+									<span class="text-muted small">Oct 26, 2026</span>
+								</div>
+								<p class="mb-0 text-muted small" style="line-height: 1.6;">
+									The explanation of <code>select_related</code> and foreign key prefetching resolved our database bottleneck on course catalog filtering. Excellent breakdown!
+								</p>
+							</li>
+
+							<!-- Comment 2 -->
+							<li class="p-3 mb-3 bg-light rounded border">
+								<div class="d-flex justify-content-between align-items-center mb-2">
+									<div class="font-weight-bold text-dark">
+										<i class="fa fa-user-circle text-info mr-2"></i> Aisha Rahman
+										<span class="badge badge-info ml-2 small" style="font-size: 10px;">Enrolled Student</span>
+									</div>
+									<span class="text-muted small">Oct 28, 2026</span>
+								</div>
+								<p class="mb-0 text-muted small" style="line-height: 1.6;">
+									Really appreciate the modular structure where backend admin and frontend user features are separated. Highly recommended for students following the Full-Stack curriculum.
+								</p>
+							</li>
+						</ul>
+
+						<!-- Add Discussion Note -->
+						<div class="p-4 rounded border bg-white shadow-sm text-center">
+							<h6 class="font-weight-bold text-dark mb-2">Join the Course Discussion</h6>
+							<p class="small text-muted mb-3">Enrolled students can interact directly with instructors and peers inside each course module.</p>
+							<a href="{% url 'frontend:courses' %}" class="btn btn-outline-info btn-sm font-weight-bold">
+								Browse Course Catalog
+							</a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<!-- Blog Sidebar -->
+			<div class="col-lg-4">
+				<div class="sidebar">
+
+					<!-- Learning Disciplines -->
+					<div class="sidebar_section">
+						<div class="sidebar_section_title">Course Disciplines</div>
+						<div class="sidebar_categories">
+							<ul class="categories_list">
+								<li><a href="{% url 'frontend:courses' %}" class="clearfix">Software Engineering <span class="badge badge-light border float-right">Active</span></a></li>
+								<li><a href="{% url 'frontend:courses' %}" class="clearfix">Data Science & AI <span class="badge badge-light border float-right">Active</span></a></li>
+								<li><a href="{% url 'frontend:courses' %}" class="clearfix">Cloud Computing & DevOps <span class="badge badge-light border float-right">Active</span></a></li>
+								<li><a href="{% url 'frontend:courses' %}" class="clearfix">Electric Vehicle Tech <span class="badge badge-light border float-right">Active</span></a></li>
+								<li><a href="{% url 'frontend:courses' %}" class="clearfix">UI/UX Design Systems <span class="badge badge-light border float-right">Active</span></a></li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Featured Course CTA -->
+					<div class="sidebar_section">
+						<div class="p-4 bg-white rounded border shadow-sm text-center">
+							<div class="mb-3" style="width: 50px; height: 50px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto;">
+								<i class="fa fa-graduation-cap"></i>
+							</div>
+							<h5 class="font-weight-bold text-dark mb-2">Learn Hands-On with Zylora</h5>
+							<p class="small text-muted mb-3" style="line-height: 1.6;">
+								Master technical concepts through video lectures, downloadable guides, and live lesson completion tracking.
+							</p>
+							<a href="{% url 'frontend:courses' %}" class="btn btn-info btn-block font-weight-bold" style="background: #14bdee; border-radius: 8px;">
+								Browse All Courses
+							</a>
+						</div>
+					</div>
+
+					<!-- Related Articles -->
+					<div class="sidebar_section">
+						<div class="sidebar_section_title">Recent Articles</div>
+						<div class="sidebar_latest">
+							<div class="latest d-flex flex-row align-items-start justify-content-start mb-3 pb-3 border-bottom">
+								<div class="latest_content">
+									<div class="latest_title font-weight-bold" style="font-size: 13px;">
+										<a href="{% url 'frontend:blog_single' %}" style="color: #1e293b;">Neural Networks in Production: Industry Demands</a>
+									</div>
+									<div class="small text-muted mt-1"><i class="fa fa-calendar mr-1"></i> Oct 18, 2026</div>
+								</div>
+							</div>
+							<div class="latest d-flex flex-row align-items-start justify-content-start mb-3 pb-3 border-bottom">
+								<div class="latest_content">
+									<div class="latest_title font-weight-bold" style="font-size: 13px;">
+										<a href="{% url 'frontend:blog_single' %}" style="color: #1e293b;">Electric Vehicle Powertrain Architecture</a>
+									</div>
+									<div class="small text-muted mt-1"><i class="fa fa-calendar mr-1"></i> Oct 12, 2026</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- Newsletter -->
+<div class="newsletter">
+	<div class="newsletter_background" style="background-image:url({% static 'frontend/images/newsletter_background.jpg' %})"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="newsletter_container d-flex flex-lg-row flex-column align-items-center justify-content-start">
+
+					<div class="newsletter_content text-lg-left text-center">
+						<div class="newsletter_title">Ready to Elevate Your Skills?</div>
+						<div class="newsletter_subtitle">Sign up for a free student account and begin learning today.</div>
+					</div>
+
+					<div class="newsletter_form_container ml-lg-auto">
+						<a href="{% url 'frontend:register' %}" class="newsletter_button d-inline-flex align-items-center justify-content-center text-white" style="text-decoration: none; line-height: 48px;">
+							Register for Free <i class="fa fa-user-plus ml-2"></i>
+						</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'frontend/plugins/colorbox/jquery.colorbox-min.js' %}"></script>
+<script src="{% static 'frontend/js/blog_single.js' %}"></script>
+{% endblock %}

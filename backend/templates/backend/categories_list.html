@@ -1,0 +1,80 @@
+{% extends 'backend/base_admin.html' %}
+
+{% block title %}Manage Categories - Zylora Admin{% endblock %}
+{% block page_title %}Course Categories{% endblock %}
+
+{% block admin_content %}
+<div class="dash_panel">
+	<div class="dash_panel_header">
+		<div>
+			<h3 class="dash_panel_title"><i class="fa fa-th-large"></i> Course Categories</h3>
+			<span class="small text-muted">{{ categories|length }} active categories</span>
+		</div>
+
+		<div>
+			<a href="{% url 'backend:category_create' %}" class="btn_admin_primary">
+				<i class="fa fa-plus"></i> Add Category
+			</a>
+		</div>
+	</div>
+
+	<div class="table-responsive">
+		<table class="custom_table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Category Name</th>
+					<th>Slug</th>
+					<th>Icon</th>
+					<th>Courses</th>
+					<th>Created</th>
+					<th class="text-right">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for cat in categories %}
+				<tr>
+					<td>{{ forloop.counter }}</td>
+					<td>
+						<div class="d-flex align-items-center">
+							<div class="mr-2" style="width: 32px; height: 32px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center;">
+								<i class="fa {{ cat.icon|default:'fa-laptop' }}"></i>
+							</div>
+							<div>
+								<span style="font-weight: 600; color: #1e293b;">{{ cat.name }}</span>
+								{% if cat.description %}
+								<div class="small text-muted" style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ cat.description }}</div>
+								{% endif %}
+							</div>
+						</div>
+					</td>
+					<td><code>{{ cat.slug }}</code></td>
+					<td><code>{{ cat.icon }}</code></td>
+					<td>
+						<a href="{% url 'backend:courses_list' %}?category={{ cat.id }}" class="badge badge-info px-2 py-1">
+							{{ cat.course_count }} course{{ cat.course_count|pluralize }}
+						</a>
+					</td>
+					<td>{{ cat.created_at|date:"M d, Y" }}</td>
+					<td class="text-right">
+						<a href="{% url 'backend:category_edit' cat.id %}" class="btn_action_sm btn_action_edit" title="Edit Category">
+							<i class="fa fa-pencil"></i> Edit
+						</a>
+						<a href="{% url 'backend:category_delete' cat.id %}" class="btn_action_sm btn_action_delete" title="Delete Category">
+							<i class="fa fa-trash"></i>
+						</a>
+					</td>
+				</tr>
+				{% empty %}
+				<tr>
+					<td colspan="7" class="text-center text-muted py-5">
+						<i class="fa fa-folder-o fa-2x mb-3 text-muted"></i>
+						<div>No categories found.</div>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

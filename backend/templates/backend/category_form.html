@@ -1,0 +1,57 @@
+{% extends 'backend/base_admin.html' %}
+
+{% block title %}{{ title }} - Zylora Admin{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+	<div class="col-lg-7 mx-auto">
+		<div class="dash_panel">
+			<div class="dash_panel_header">
+				<h3 class="dash_panel_title"><i class="fa fa-th-large"></i> {{ title }}</h3>
+				<a href="{% url 'backend:categories_list' %}" class="btn btn-outline-secondary btn-sm">
+					<i class="fa fa-arrow-left mr-1"></i> Back to Categories
+				</a>
+			</div>
+
+			<form method="post">
+				{% csrf_token %}
+
+				<div class="form-group mb-3">
+					<label class="font-weight-bold">Category Name *</label>
+					{{ form.name }}
+					{% if form.name.errors %}<div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>{% endif %}
+				</div>
+
+				<div class="row">
+					<div class="col-md-6 form-group mb-3">
+						<label class="font-weight-bold">Slug (Optional)</label>
+						{{ form.slug }}
+						<small class="form-text text-muted">Leave blank to auto-generate from category name.</small>
+						{% if form.slug.errors %}<div class="text-danger small mt-1">{{ form.slug.errors.0 }}</div>{% endif %}
+					</div>
+					<div class="col-md-6 form-group mb-3">
+						<label class="font-weight-bold">Font Awesome Icon Class</label>
+						{{ form.icon }}
+						<small class="form-text text-muted">e.g. fa-laptop, fa-code, fa-database, fa-paint-brush</small>
+						{% if form.icon.errors %}<div class="text-danger small mt-1">{{ form.icon.errors.0 }}</div>{% endif %}
+					</div>
+				</div>
+
+				<div class="form-group mb-4">
+					<label class="font-weight-bold">Description (Optional)</label>
+					{{ form.description }}
+					{% if form.description.errors %}<div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>{% endif %}
+				</div>
+
+				<div class="border-top pt-3 text-right">
+					<a href="{% url 'backend:categories_list' %}" class="btn btn-light mr-2">Cancel</a>
+					<button type="submit" class="btn_admin_primary">
+						<i class="fa fa-save"></i> Save Category
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,315 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}{{ lesson.title }} - {{ course.title }} | Zylora LMS{% endblock %}
+
+{% block extra_css %}
+<style>
+	.lesson_learning_section {
+		background: #f8fafc;
+		padding: 40px 0 80px 0;
+		min-height: 80vh;
+	}
+	.video_player_container {
+		background: #090e1a;
+		border-radius: 12px;
+		overflow: hidden;
+		position: relative;
+		padding-top: 56.25%; /* 16:9 Aspect Ratio */
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+		margin-bottom: 24px;
+	}
+	.video_player_container iframe,
+	.video_player_container video {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+	.learning_panel {
+		background: #ffffff;
+		border-radius: 12px;
+		border: 1px solid #e2e8f0;
+		padding: 30px;
+		box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+		margin-bottom: 25px;
+	}
+	.curriculum_sidebar_card {
+		background: #ffffff;
+		border-radius: 12px;
+		border: 1px solid #e2e8f0;
+		overflow: hidden;
+		box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+		position: sticky;
+		top: 100px;
+	}
+	.curriculum_sidebar_header {
+		background: #0f172a;
+		color: #ffffff;
+		padding: 20px;
+	}
+	.curriculum_lesson_item {
+		display: flex;
+		align-items: center;
+		padding: 14px 18px;
+		border-bottom: 1px solid #f1f5f9;
+		color: #334155;
+		text-decoration: none;
+		transition: all 0.2s ease;
+		font-size: 14px;
+	}
+	.curriculum_lesson_item:hover {
+		background: #f0f9ff;
+		color: #0284c7;
+		text-decoration: none;
+	}
+	.curriculum_lesson_item.active {
+		background: #e0f2fe;
+		color: #0369a1;
+		font-weight: 700;
+		border-left: 4px solid #14bdee;
+	}
+	.curriculum_icon {
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 11px;
+		font-weight: 700;
+		margin-right: 12px;
+		flex-shrink: 0;
+	}
+	.curriculum_icon.done {
+		background: #dcfce7;
+		color: #16a34a;
+	}
+	.curriculum_icon.current {
+		background: #14bdee;
+		color: #ffffff;
+	}
+	.curriculum_icon.pending {
+		background: #f1f5f9;
+		color: #64748b;
+	}
+	.btn_complete_toggle {
+		font-size: 14px;
+		font-weight: 600;
+		padding: 10px 22px;
+		border-radius: 8px;
+		transition: all 0.2s ease;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs -->
+<div class="home">
+	<div class="breadcrumbs_container">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="breadcrumbs">
+						<ul>
+							<li><a href="{% url 'frontend:index' %}">Home</a></li>
+							<li><a href="{% url 'frontend:courses' %}">Courses</a></li>
+							<li><a href="{% url 'frontend:course_detail' course.slug %}">{{ course.title|truncatechars:30 }}</a></li>
+							<li>Lesson {{ lesson.order }}</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>			
+</div>
+
+<div class="lesson_learning_section">
+	<div class="container">
+
+		<!-- Course Banner & Progress Bar -->
+		<div class="card p-3 mb-4 border-0 shadow-sm" style="background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border-radius: 12px;">
+			<div class="row align-items-center">
+				<div class="col-md-7 mb-2 mb-md-0">
+					<div class="small text-info text-uppercase font-weight-bold">
+						<i class="fa fa-book mr-1"></i> {{ course.category.name|default:"Online Learning" }}
+					</div>
+					<h3 class="mb-0 font-weight-bold" style="font-size: 20px;">
+						<a href="{% url 'frontend:course_detail' course.slug %}" style="color: #ffffff;">{{ course.title }}</a>
+					</h3>
+				</div>
+				<div class="col-md-5">
+					{% if is_enrolled %}
+					<div class="d-flex justify-content-between text-white-50 small mb-1">
+						<span>Your Course Progress</span>
+						<span class="font-weight-bold text-info">{{ enrollment.progress }}%</span>
+					</div>
+					<div class="progress" style="height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px;">
+						<div class="progress-bar" style="width: {{ enrollment.progress }}%; background: #14bdee;"></div>
+					</div>
+					{% else %}
+					<div class="text-md-right">
+						<span class="badge badge-success px-3 py-2 font-weight-bold">
+							<i class="fa fa-eye mr-1"></i> Free Preview Mode
+						</span>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<!-- Main Lesson Content -->
+			<div class="col-lg-8">
+				
+				<!-- Video Player / Embed -->
+				{% if lesson.video_url %}
+				<div class="video_player_container">
+					{% if "youtube.com" in lesson.video_url or "youtu.be" in lesson.video_url or "vimeo.com" in lesson.video_url %}
+					<iframe src="{{ lesson.video_url }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					{% else %}
+					<video controls>
+						<source src="{{ lesson.video_url }}" type="video/mp4">
+						Your browser does not support the video tag.
+					</video>
+					{% endif %}
+				</div>
+				{% else %}
+				<div class="p-4 mb-4 rounded border text-center" style="background: #e0f2fe; color: #0369a1;">
+					<i class="fa fa-file-text-o fa-3x mb-2"></i>
+					<h5 class="font-weight-bold">Interactive Reading & Notes Module</h5>
+					<p class="small mb-0">Study the comprehensive learning notes below, complete the assigned exercises, and click <strong>Mark as Completed</strong> to track your progress.</p>
+				</div>
+				{% endif %}
+
+				<!-- Lesson Overview Card -->
+				<div class="learning_panel">
+					<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-3 border-bottom">
+						<div>
+							<span class="badge badge-light border text-muted px-2 py-1 mb-1 font-weight-bold">
+								Lesson #{{ lesson.order }}
+							</span>
+							<h2 style="font-size: 24px; font-weight: 700; color: #1e293b; margin: 0;">
+								{{ lesson.title }}
+							</h2>
+						</div>
+
+						{% if is_enrolled %}
+						<div class="mt-2 mt-md-0">
+							<form action="{% url 'frontend:toggle_lesson_completion' course.slug lesson.id %}" method="post">
+								{% csrf_token %}
+								{% if is_completed %}
+								<button type="submit" class="btn btn-success btn_complete_toggle shadow-sm">
+									<i class="fa fa-check-circle mr-1"></i> Completed (Click to Undo)
+								</button>
+								{% else %}
+								<button type="submit" class="btn btn-outline-info btn_complete_toggle shadow-sm" style="border-width: 2px;">
+									<i class="fa fa-circle-o mr-1"></i> Mark as Completed
+								</button>
+								{% endif %}
+							</form>
+						</div>
+						{% endif %}
+					</div>
+
+					<!-- Lesson Meta -->
+					<div class="d-flex align-items-center text-muted small mb-4">
+						<span class="mr-3"><i class="fa fa-clock-o text-info mr-1"></i> {{ lesson.duration_minutes }} minutes estimated</span>
+						<span class="mr-3"><i class="fa fa-user-circle text-info mr-1"></i> Instructor: {{ course.instructor_name }}</span>
+						{% if lesson.is_preview %}
+						<span class="text-success"><i class="fa fa-unlock mr-1"></i> Preview Accessible</span>
+						{% endif %}
+					</div>
+
+					<!-- Lesson Content / Lecture Notes -->
+					<div class="lesson_body_text" style="font-size: 15px; line-height: 1.8; color: #334155;">
+						{% if lesson.content %}
+						{{ lesson.content|linebreaks }}
+						{% else %}
+						<p class="text-muted italic">Review the video material for this lecture and proceed through the sequence to finish the module.</p>
+						{% endif %}
+					</div>
+
+					<!-- Navigation Buttons (Prev / Next) -->
+					<div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+						<div>
+							{% if prev_lesson %}
+							<a href="{% url 'frontend:lesson_learning' course.slug prev_lesson.id %}" class="btn btn-outline-secondary btn-sm px-3 py-2 font-weight-bold">
+								<i class="fa fa-arrow-left mr-1"></i> Previous: Lesson {{ prev_lesson.order }}
+							</a>
+							{% else %}
+							<a href="{% url 'frontend:course_detail' course.slug %}" class="btn btn-outline-secondary btn-sm px-3 py-2">
+								<i class="fa fa-arrow-left mr-1"></i> Course Overview
+							</a>
+							{% endif %}
+						</div>
+
+						<div>
+							{% if next_lesson %}
+							<a href="{% url 'frontend:lesson_learning' course.slug next_lesson.id %}" class="btn btn-info btn-sm px-3 py-2 font-weight-bold text-white" style="background: #14bdee;">
+								Next: Lesson {{ next_lesson.order }} <i class="fa fa-arrow-right ml-1"></i>
+							</a>
+							{% else %}
+							<a href="{% url 'frontend:dashboard' %}" class="btn btn-success btn-sm px-3 py-2 font-weight-bold">
+								Finish & View Dashboard <i class="fa fa-trophy ml-1"></i>
+							</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Curriculum Sidebar Navigation -->
+			<div class="col-lg-4">
+				<div class="curriculum_sidebar_card">
+					<div class="curriculum_sidebar_header">
+						<h5 class="mb-1 font-weight-bold" style="font-size: 16px;">Course Curriculum</h5>
+						<span class="small text-white-50">{{ lessons|length }} total lessons</span>
+					</div>
+
+					<div class="curriculum_list_scroll" style="max-height: 600px; overflow-y: auto;">
+						{% for l in lessons %}
+						<a href="{% url 'frontend:lesson_learning' course.slug l.id %}" class="curriculum_lesson_item {% if l.id == lesson.id %}active{% endif %}">
+							<div class="curriculum_icon {% if l.id in completed_lesson_ids %}done{% elif l.id == lesson.id %}current{% else %}pending{% endif %}">
+								{% if l.id in completed_lesson_ids %}
+								<i class="fa fa-check"></i>
+								{% else %}
+								{{ l.order }}
+								{% endif %}
+							</div>
+							<div class="flex-grow-1" style="min-width: 0;">
+								<div class="text-truncate font-weight-600" style="color: #1e293b;">
+									{{ l.title }}
+								</div>
+								<div class="small text-muted">
+									{{ l.duration_minutes }}m {% if l.is_preview %}&bull; <span class="text-success">Preview</span>{% endif %}
+								</div>
+							</div>
+							<div class="ml-2">
+								{% if l.id in completed_lesson_ids %}
+								<span class="text-success small"><i class="fa fa-check-circle"></i></span>
+								{% elif not is_enrolled and not l.is_preview %}
+								<span class="text-muted small"><i class="fa fa-lock"></i></span>
+								{% else %}
+								<i class="fa fa-angle-right text-muted"></i>
+								{% endif %}
+							</div>
+						</a>
+						{% endfor %}
+					</div>
+
+					<div class="p-3 bg-light border-top text-center">
+						<a href="{% url 'frontend:dashboard' %}" class="small text-info font-weight-bold">
+							<i class="fa fa-dashboard mr-1"></i> Return to Student Dashboard
+						</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+{% endblock %}

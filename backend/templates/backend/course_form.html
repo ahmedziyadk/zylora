@@ -1,0 +1,105 @@
+{% extends 'backend/base_admin.html' %}
+
+{% block title %}{{ title }} - Zylora Admin{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+	<div class="col-lg-9 mx-auto">
+		<div class="dash_panel">
+			<div class="dash_panel_header">
+				<h3 class="dash_panel_title"><i class="fa fa-book"></i> Course Details</h3>
+				<a href="{% url 'backend:courses_list' %}" class="btn btn-outline-secondary btn-sm">
+					<i class="fa fa-arrow-left mr-1"></i> Back to Courses
+				</a>
+			</div>
+
+			<form method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+
+				<div class="form-group mb-3">
+					<label class="font-weight-bold">Course Title *</label>
+					{{ form.title }}
+					{% if form.title.errors %}<div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>{% endif %}
+				</div>
+
+				<div class="row">
+					<div class="col-md-6 form-group mb-3">
+						<label class="font-weight-bold">Category</label>
+						{{ form.category }}
+						{% if form.category.errors %}<div class="text-danger small mt-1">{{ form.category.errors.0 }}</div>{% endif %}
+					</div>
+					<div class="col-md-6 form-group mb-3">
+						<label class="font-weight-bold">Instructor Display Name *</label>
+						{{ form.instructor_name }}
+						{% if form.instructor_name.errors %}<div class="text-danger small mt-1">{{ form.instructor_name.errors.0 }}</div>{% endif %}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-4 form-group mb-3">
+						<label class="font-weight-bold">Price ($)</label>
+						{{ form.price }}
+						{% if form.price.errors %}<div class="text-danger small mt-1">{{ form.price.errors.0 }}</div>{% endif %}
+					</div>
+					<div class="col-md-4 form-group mb-3">
+						<label class="font-weight-bold">Duration (Weeks)</label>
+						{{ form.duration_weeks }}
+						{% if form.duration_weeks.errors %}<div class="text-danger small mt-1">{{ form.duration_weeks.errors.0 }}</div>{% endif %}
+					</div>
+					<div class="col-md-4 form-group mb-3">
+						<label class="font-weight-bold">Difficulty Level</label>
+						{{ form.level }}
+						{% if form.level.errors %}<div class="text-danger small mt-1">{{ form.level.errors.0 }}</div>{% endif %}
+					</div>
+				</div>
+
+				<div class="form-group mb-3">
+					<label class="font-weight-bold">Course Thumbnail / Cover Image</label>
+					{{ form.image }}
+					<small class="form-text text-muted">Upload a high-resolution thumbnail image (JPG/PNG). If blank, an appropriate default image is displayed.</small>
+					{% if form.image.errors %}<div class="text-danger small mt-1">{{ form.image.errors.0 }}</div>{% endif %}
+					{% if course and course.image %}
+					<div class="mt-2">
+						<span class="text-muted small">Current: </span>
+						<img src="{{ course.image.url }}" alt="Thumbnail" style="height: 60px; border-radius: 6px;" class="border">
+					</div>
+					{% endif %}
+				</div>
+
+				<div class="form-group mb-4">
+					<label class="font-weight-bold">Description *</label>
+					{{ form.description }}
+					{% if form.description.errors %}<div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>{% endif %}
+				</div>
+
+				<div class="row mb-4">
+					<div class="col-md-6">
+						<div class="form-check p-3 bg-light rounded border">
+							{{ form.is_featured }}
+							<label class="form-check-label font-weight-bold ml-2" for="id_is_featured">
+								Featured Course (Highlight on Homepage)
+							</label>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-check p-3 bg-light rounded border">
+							{{ form.is_published }}
+							<label class="form-check-label font-weight-bold ml-2" for="id_is_published">
+								Published (Visible to students)
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="border-top pt-3 text-right">
+					<a href="{% url 'backend:courses_list' %}" class="btn btn-light mr-2">Cancel</a>
+					<button type="submit" class="btn_admin_primary">
+						<i class="fa fa-save"></i> Save Course
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

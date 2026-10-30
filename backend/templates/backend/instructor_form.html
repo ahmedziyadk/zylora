@@ -1,0 +1,63 @@
+{% extends 'backend/base_admin.html' %}
+
+{% block title %}{{ title }} - Zylora Admin{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+	<div class="col-lg-7 mx-auto">
+		<div class="dash_panel">
+			<div class="dash_panel_header">
+				<h3 class="dash_panel_title"><i class="fa fa-user-plus"></i> {{ title }}</h3>
+				<a href="{% url 'backend:instructors_list' %}" class="btn btn-outline-secondary btn-sm">
+					<i class="fa fa-arrow-left mr-1"></i> Back to Instructors
+				</a>
+			</div>
+
+			<form method="post">
+				{% csrf_token %}
+
+				<div class="row">
+					<div class="col-md-6 form-group mb-3">
+						<label class="font-weight-bold">First Name *</label>
+						{{ form.first_name }}
+						{% if form.first_name.errors %}<div class="text-danger small mt-1">{{ form.first_name.errors.0 }}</div>{% endif %}
+					</div>
+					<div class="col-md-6 form-group mb-3">
+						<label class="font-weight-bold">Last Name *</label>
+						{{ form.last_name }}
+						{% if form.last_name.errors %}<div class="text-danger small mt-1">{{ form.last_name.errors.0 }}</div>{% endif %}
+					</div>
+				</div>
+
+				<div class="form-group mb-3">
+					<label class="font-weight-bold">Username *</label>
+					{{ form.username }}
+					<small class="form-text text-muted">Used for login into the instructor portal.</small>
+					{% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>{% endif %}
+				</div>
+
+				<div class="form-group mb-3">
+					<label class="font-weight-bold">Email Address *</label>
+					{{ form.email }}
+					{% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
+				</div>
+
+				<div class="form-group mb-4">
+					<label class="font-weight-bold">Initial Password * (min 6 characters)</label>
+					{{ form.password }}
+					<small class="form-text text-muted">The instructor can change their password after logging in.</small>
+					{% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>{% endif %}
+				</div>
+
+				<div class="border-top pt-3 text-right">
+					<a href="{% url 'backend:instructors_list' %}" class="btn btn-light mr-2">Cancel</a>
+					<button type="submit" class="btn_admin_primary">
+						<i class="fa fa-check"></i> Create Instructor
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

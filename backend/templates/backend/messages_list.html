@@ -1,0 +1,89 @@
+{% extends 'backend/base_admin.html' %}
+
+{% block title %}Contact Inquiries - Zylora Admin{% endblock %}
+{% block page_title %}Website Inquiries{% endblock %}
+
+{% block admin_content %}
+<div class="dash_panel">
+	<div class="dash_panel_header">
+		<div>
+			<h3 class="dash_panel_title"><i class="fa fa-envelope-o"></i> User Inquiries & Messages</h3>
+			<span class="small text-muted">{{ unread_count }} unread message{{ unread_count|pluralize }}</span>
+		</div>
+
+		<!-- Filter Buttons -->
+		<div class="btn-group btn-group-sm">
+			<a href="{% url 'backend:messages_list' %}" class="btn {% if not filter_type %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+				All
+			</a>
+			<a href="{% url 'backend:messages_list' %}?filter=unread" class="btn {% if filter_type == 'unread' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+				Unread ({{ unread_count }})
+			</a>
+			<a href="{% url 'backend:messages_list' %}?filter=read" class="btn {% if filter_type == 'read' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+				Read
+			</a>
+		</div>
+	</div>
+
+	<div class="table-responsive">
+		<table class="custom_table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Sender</th>
+					<th>Email</th>
+					<th>Subject</th>
+					<th>Message</th>
+					<th>Received</th>
+					<th>Status</th>
+					<th class="text-right">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for msg in inquiries %}
+				<tr style="{% if not msg.is_read %}background: #f0fdf4; font-weight: 500;{% endif %}">
+					<td>{{ forloop.counter }}</td>
+					<td>
+						<strong style="color: #0f172a;">{{ msg.name }}</strong>
+					</td>
+					<td><a href="mailto:{{ msg.email }}">{{ msg.email }}</a></td>
+					<td>{{ msg.subject|default:"General Inquiry" }}</td>
+					<td style="max-width: 320px;">
+						<div class="text-truncate" title="{{ msg.message }}">
+							{{ msg.message }}
+						</div>
+					</td>
+					<td>{{ msg.created_at|date:"M d, Y H:i" }}</td>
+					<td>
+						{% if msg.is_read %}
+						<span class="badge badge-light border text-muted">Read</span>
+						{% else %}
+						<span class="badge badge-danger px-2 py-1"><i class="fa fa-dot-circle-o mr-1"></i> New</span>
+						{% endif %}
+					</td>
+					<td class="text-right">
+						<a href="mailto:{{ msg.email }}?subject=Re: {{ msg.subject|urlencode }}" class="btn_action_sm btn_action_edit" title="Reply via Email">
+							<i class="fa fa-reply"></i> Reply
+						</a>
+						<a href="{% url 'backend:message_toggle_read' msg.id %}" class="btn_action_sm btn_action_toggle" title="Toggle read/unread">
+							<i class="fa {% if msg.is_read %}fa-envelope{% else %}fa-envelope-open{% endif %}"></i>
+							{% if msg.is_read %}Unread{% else %}Mark Read{% endif %}
+						</a>
+						<a href="{% url 'backend:message_delete' msg.id %}" class="btn_action_sm btn_action_delete" title="Delete Inquiry">
+							<i class="fa fa-trash"></i>
+						</a>
+					</td>
+				</tr>
+				{% empty %}
+				<tr>
+					<td colspan="8" class="text-center text-muted py-5">
+						<i class="fa fa-inbox fa-2x mb-3 text-muted"></i>
+						<div>No inquiries found.</div>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

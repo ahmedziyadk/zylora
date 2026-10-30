@@ -1,0 +1,228 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}About Us - Zylora Learning Management System{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'frontend/plugins/colorbox/colorbox.css' %}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/plugins/OwlCarousel2-2.2.1/owl.carousel.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/plugins/OwlCarousel2-2.2.1/owl.theme.default.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/plugins/OwlCarousel2-2.2.1/animate.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/about.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/about_responsive.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs -->
+<div class="home">
+	<div class="breadcrumbs_container">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="breadcrumbs">
+						<ul>
+							<li><a href="{% url 'frontend:index' %}">Home</a></li>
+							<li>About Zylora</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>			
+</div>
+
+<!-- About Section -->
+<div class="about">
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="section_title_container text-center">
+					<h2 class="section_title">About Zylora LMS</h2>
+					<div class="section_subtitle">
+						<p>Empowering the next generation of engineers, developers, data scientists, and creative leaders with world-class online education.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row about_row">
+			
+			<!-- About Item -->
+			<div class="col-lg-4 about_col about_col_left">
+				<div class="about_item">
+					<div class="about_item_image"><img src="{% static 'frontend/images/about_1.jpg' %}" alt="Our Story"></div>
+					<div class="about_item_title"><a href="{% url 'frontend:courses' %}">Our Foundation</a></div>
+					<div class="about_item_text">
+						<p>Zylora was created to bridge the gap between academic theory and real-world technology production standards through dynamic, modular learning paths.</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- About Item -->
+			<div class="col-lg-4 about_col about_col_middle">
+				<div class="about_item">
+					<div class="about_item_image"><img src="{% static 'frontend/images/about_2.jpg' %}" alt="Our Mission"></div>
+					<div class="about_item_title"><a href="{% url 'frontend:courses' %}">Our Mission</a></div>
+					<div class="about_item_text">
+						<p>To provide accessible, high-caliber technical education with video lectures, transparent progress tracking, and structured lesson syllabi.</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- About Item -->
+			<div class="col-lg-4 about_col about_col_right">
+				<div class="about_item">
+					<div class="about_item_image"><img src="{% static 'frontend/images/about_3.jpg' %}" alt="Our Vision"></div>
+					<div class="about_item_title"><a href="{% url 'frontend:courses' %}">Our Vision</a></div>
+					<div class="about_item_text">
+						<p>A global digital campus where motivated students master high-impact skills at their own pace and unlock premier career opportunities worldwide.</p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- Feature Section -->
+<div class="feature">
+	<div class="feature_background" style="background-image:url({% static 'frontend/images/courses_background.jpg' %})"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="section_title_container text-center">
+					<h2 class="section_title">Why Choose Zylora</h2>
+					<div class="section_subtitle">
+						<p>Built with Django and tailored specifically for scalable, interactive online education.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row feature_row align-items-center">
+
+			<!-- Feature Content -->
+			<div class="col-lg-6 feature_col">
+				<div class="feature_content">
+					<div class="accordions">
+						<div class="elements_accordions">
+
+							<div class="accordion_container">
+								<div class="accordion d-flex flex-row align-items-center active"><div>Modular Curriculum & Lessons</div></div>
+								<div class="accordion_panel">
+									<p>Each course is structured into sequential chapters and video lectures, allowing students to study systematically and complete lessons one by one.</p>
+								</div>
+							</div>
+
+							<div class="accordion_container">
+								<div class="accordion d-flex flex-row align-items-center"><div>Automated Progress Tracking</div></div>
+								<div class="accordion_panel">
+									<p>Our database calculates your exact completion percentage as you finish each lesson, updating both your student dashboard and course status automatically.</p>
+								</div>
+							</div>
+
+							<div class="accordion_container">
+								<div class="accordion d-flex flex-row align-items-center"><div>Expert-Led Instruction</div></div>
+								<div class="accordion_panel">
+									<p>Instructors are industry experts with hands-on domain experience in Software Engineering, Machine Learning, DevOps, EV Technology, and UI/UX Design.</p>
+								</div>
+							</div>
+
+							<div class="accordion_container">
+								<div class="accordion d-flex flex-row align-items-center"><div>Direct Admin & Instructor Controls</div></div>
+								<div class="accordion_panel">
+									<p>Course curriculum, categories, and student accounts are managed through secure administrative portals, ensuring content is continuously updated.</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Feature Image / Visual -->
+			<div class="col-lg-6 feature_col">
+				<div class="p-4 rounded shadow-lg text-white" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 16px;">
+					<h3 class="font-weight-bold mb-3" style="color: #14bdee;">
+						<i class="fa fa-graduation-cap mr-2"></i> Elevate Your Future
+					</h3>
+					<p class="text-white-50" style="line-height: 1.8;">
+						Whether you are breaking into full-stack web development, advancing your DevOps pipelines, or entering electric vehicle engineering, Zylora provides the verified platform you need to succeed.
+					</p>
+					<div class="mt-4 pt-3 border-top border-secondary">
+						<a href="{% url 'frontend:courses' %}" class="btn btn-info font-weight-bold px-4 py-2" style="background: #14bdee; border-radius: 8px;">
+							Explore Courses Catalog <i class="fa fa-arrow-right ml-1"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Counter -->
+<div class="counter">
+	<div class="counter_background" style="background-image:url({% static 'frontend/images/counter_background.jpg' %})"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="counter_content">
+					<h2 class="counter_title">Platform Highlights</h2>
+					<div class="counter_text">
+						<p>Real platform statistics driven by actual student accounts and active courses.</p>
+					</div>
+
+					<!-- Milestones -->
+					<div class="milestones d-flex flex-md-row flex-column align-items-center justify-content-between">
+						
+						<!-- Milestone -->
+						<div class="milestone">
+							<div class="milestone_counter" data-end-value="{{ total_courses|default:'6' }}">{{ total_courses|default:'6' }}</div>
+							<div class="milestone_text">Courses</div>
+						</div>
+
+						<!-- Milestone -->
+						<div class="milestone">
+							<div class="milestone_counter" data-end-value="{{ total_students|default:'10' }}">{{ total_students|default:'10' }}</div>
+							<div class="milestone_text">Students</div>
+						</div>
+
+						<!-- Milestone -->
+						<div class="milestone">
+							<div class="milestone_counter" data-end-value="{{ categories.count|default:'5' }}">{{ categories.count|default:'5' }}</div>
+							<div class="milestone_text">Categories</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="counter_form">
+				<div class="row fill_height">
+					<div class="col fill_height">
+						<form class="counter_form_content d-flex flex-column align-items-center justify-content-center" action="{% url 'frontend:contact' %}" method="post">
+							{% csrf_token %}
+							<div class="counter_form_title">Contact Our Team</div>
+							<input type="text" name="name" class="counter_input" placeholder="Your Name:" required="required">
+							<input type="email" name="email" class="counter_input" placeholder="Your Email:" required="required">
+							<input type="text" name="subject" class="counter_input" placeholder="Subject:" required="required">
+							<textarea name="message" class="counter_input counter_text_input" placeholder="Your Message:" required="required"></textarea>
+							<button type="submit" class="counter_form_button">Submit Message</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'frontend/plugins/greensock/TweenMax.min.js' %}"></script>
+<script src="{% static 'frontend/plugins/greensock/TimelineMax.min.js' %}"></script>
+<script src="{% static 'frontend/plugins/scrollmagic/ScrollMagic.min.js' %}"></script>
+<script src="{% static 'frontend/plugins/greensock/animation.gsap.min.js' %}"></script>
+<script src="{% static 'frontend/plugins/greensock/ScrollToPlugin.min.js' %}"></script>
+<script src="{% static 'frontend/plugins/OwlCarousel2-2.2.1/owl.carousel.js' %}"></script>
+<script src="{% static 'frontend/plugins/colorbox/jquery.colorbox-min.js' %}"></script>
+<script src="{% static 'frontend/js/about.js' %}"></script>
+{% endblock %}

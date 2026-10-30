@@ -1,0 +1,114 @@
+{% extends 'backend/base_admin.html' %}
+
+{% block title %}Manage Courses - Zylora Admin{% endblock %}
+{% block page_title %}Courses Management{% endblock %}
+
+{% block admin_content %}
+<div class="dash_panel">
+	<div class="dash_panel_header">
+		<div>
+			<h3 class="dash_panel_title"><i class="fa fa-book"></i> Course Catalog</h3>
+			<span class="small text-muted">{{ total_count }} course{{ total_count|pluralize }} available</span>
+		</div>
+
+		<div class="d-flex align-items-center">
+			<!-- Filters & Search Form -->
+			<form method="get" action="{% url 'backend:courses_list' %}" class="form-inline mr-3">
+				<select name="category" class="form-control form-control-sm mr-2 custom-select" onchange="this.form.submit()">
+					<option value="">All Categories</option>
+					{% for cat in categories %}
+					<option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+					{% endfor %}
+				</select>
+
+				<div class="input-group input-group-sm">
+					<input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search courses..." style="min-width: 220px;">
+					<div class="input-group-append">
+						<button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+						{% if query or selected_category %}
+						<a href="{% url 'backend:courses_list' %}" class="btn btn-outline-danger" title="Clear filters"><i class="fa fa-times"></i></a>
+						{% endif %}
+					</div>
+				</div>
+			</form>
+
+			<a href="{% url 'backend:course_create' %}" class="btn_admin_primary">
+				<i class="fa fa-plus"></i> Add Course
+			</a>
+		</div>
+	</div>
+
+	<div class="table-responsive">
+		<table class="custom_table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Course Title</th>
+					<th>Category</th>
+					<th>Instructor</th>
+					<th>Price</th>
+					<th>Level</th>
+					<th>Duration</th>
+					<th>Enrollments</th>
+					<th>Status</th>
+					<th class="text-right">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for course in courses %}
+				<tr>
+					<td>{{ forloop.counter }}</td>
+					<td>
+						<div style="font-weight: 700; color: #1e293b; max-width: 260px;">
+							{{ course.title }}
+						</div>
+						{% if course.is_featured %}
+						<span class="badge badge-warning px-2 py-0" style="font-size: 10px;">FEATURED</span>
+						{% endif %}
+					</td>
+					<td>
+						{% if course.category %}
+						<span class="badge badge-info px-2 py-1">{{ course.category.name }}</span>
+						{% else %}
+						<span class="text-muted">Uncategorized</span>
+						{% endif %}
+					</td>
+					<td>{{ course.instructor_name }}</td>
+					<td><strong>${{ course.price }}</strong></td>
+					<td><span class="badge badge-light border">{{ course.level }}</span></td>
+					<td>{{ course.duration_weeks }} weeks</td>
+					<td>
+						<span class="badge badge-primary px-2 py-1">{{ course.enrollment_count }}</span>
+					</td>
+					<td>
+						{% if course.is_published %}
+						<span class="badge badge-success px-2 py-1">Published</span>
+						{% else %}
+						<span class="badge badge-secondary px-2 py-1">Draft</span>
+						{% endif %}
+					</td>
+					<td class="text-right">
+						<a href="{% url 'backend:course_lessons' course.id %}" class="btn_action_sm" style="background: #e0e7ff; color: #4338ca;" title="Manage Lessons">
+							<i class="fa fa-list"></i> Lessons ({{ course.lessons.count }})
+						</a>
+						<a href="{% url 'backend:course_edit' course.id %}" class="btn_action_sm btn_action_edit" title="Edit Course">
+							<i class="fa fa-pencil"></i> Edit
+						</a>
+						<a href="{% url 'backend:course_delete' course.id %}" class="btn_action_sm btn_action_delete" title="Delete Course">
+							<i class="fa fa-trash"></i>
+						</a>
+					</td>
+				</tr>
+				{% empty %}
+				<tr>
+					<td colspan="10" class="text-center text-muted py-5">
+						<i class="fa fa-book fa-2x mb-3 text-muted"></i>
+						<div>No courses found matching the criteria.</div>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

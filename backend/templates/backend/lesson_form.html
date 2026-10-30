@@ -1,0 +1,73 @@
+{% extends 'backend/base_admin.html' %}
+
+{% block title %}{{ title }} - Zylora Admin{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+	<div class="col-lg-8 mx-auto">
+		<div class="dash_panel">
+			<div class="dash_panel_header">
+				<h3 class="dash_panel_title"><i class="fa fa-pencil-square-o"></i> {{ title }}</h3>
+				<a href="{% url 'backend:course_lessons' course.id %}" class="btn btn-outline-secondary btn-sm">
+					<i class="fa fa-arrow-left mr-1"></i> Back to Lessons
+				</a>
+			</div>
+
+			<form method="post">
+				{% csrf_token %}
+
+				<div class="row">
+					<div class="col-md-9 form-group mb-3">
+						<label class="font-weight-bold">Lesson Title *</label>
+						{{ form.title }}
+						{% if form.title.errors %}<div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>{% endif %}
+					</div>
+					<div class="col-md-3 form-group mb-3">
+						<label class="font-weight-bold">Order / Sequence *</label>
+						{{ form.order }}
+						{% if form.order.errors %}<div class="text-danger small mt-1">{{ form.order.errors.0 }}</div>{% endif %}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6 form-group mb-3">
+						<label class="font-weight-bold">Duration (Minutes)</label>
+						{{ form.duration_minutes }}
+						{% if form.duration_minutes.errors %}<div class="text-danger small mt-1">{{ form.duration_minutes.errors.0 }}</div>{% endif %}
+					</div>
+					<div class="col-md-6 form-group mb-3">
+						<label class="font-weight-bold">Video Embed URL (Optional)</label>
+						{{ form.video_url }}
+						<small class="form-text text-muted">e.g. https://www.youtube.com/embed/... or direct video URL</small>
+						{% if form.video_url.errors %}<div class="text-danger small mt-1">{{ form.video_url.errors.0 }}</div>{% endif %}
+					</div>
+				</div>
+
+				<div class="form-group mb-3">
+					<label class="font-weight-bold">Lesson Content & Notes</label>
+					{{ form.content }}
+					<small class="form-text text-muted">Detailed lecture transcript, guidance, code examples, or reference links for students.</small>
+					{% if form.content.errors %}<div class="text-danger small mt-1">{{ form.content.errors.0 }}</div>{% endif %}
+				</div>
+
+				<div class="mb-4">
+					<div class="form-check p-3 bg-light rounded border">
+						{{ form.is_preview }}
+						<label class="form-check-label font-weight-bold ml-2" for="id_is_preview">
+							Allow Free Preview (Students can view without enrolling)
+						</label>
+					</div>
+				</div>
+
+				<div class="border-top pt-3 text-right">
+					<a href="{% url 'backend:course_lessons' course.id %}" class="btn btn-light mr-2">Cancel</a>
+					<button type="submit" class="btn_admin_primary">
+						<i class="fa fa-save"></i> Save Lesson
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

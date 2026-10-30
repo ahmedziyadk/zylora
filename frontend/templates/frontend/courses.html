@@ -1,0 +1,271 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}All Courses - Zylora Learning Catalog{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'frontend/plugins/colorbox/colorbox.css' %}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/plugins/OwlCarousel2-2.2.1/owl.carousel.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/plugins/OwlCarousel2-2.2.1/owl.theme.default.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/plugins/OwlCarousel2-2.2.1/animate.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/courses.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/courses_responsive.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Home / Breadcrumbs -->
+<div class="home">
+	<div class="breadcrumbs_container">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="breadcrumbs">
+						<ul>
+							<li><a href="{% url 'frontend:index' %}">Home</a></li>
+							<li>Courses Catalog</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>			
+</div>
+
+<!-- Courses Section -->
+<div class="courses">
+	<div class="container">
+		<div class="row">
+
+			<!-- Courses Main Content -->
+			<div class="col-lg-8">
+				<div class="courses_search_container mb-4">
+					<form action="{% url 'frontend:courses' %}" method="get" id="courses_search_form" class="courses_search_form d-flex flex-md-row flex-column align-items-center justify-content-start">
+						<input type="search" name="q" value="{{ query }}" class="courses_search_input flex-grow-1 mr-md-2 mb-2 mb-md-0" placeholder="Search Courses by Title or Keyword...">
+						<select name="category" class="courses_search_select courses_search_input mr-md-2 mb-2 mb-md-0" onchange="this.form.submit()">
+							<option value="">All Categories</option>
+							{% for cat in categories %}
+							<option value="{{ cat.slug }}" {% if selected_category == cat.slug or selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+							{% endfor %}
+						</select>
+						<select name="level" class="courses_search_select courses_search_input mr-md-2 mb-2 mb-md-0" onchange="this.form.submit()">
+							<option value="">All Levels</option>
+							<option value="Beginner" {% if selected_level == 'Beginner' %}selected{% endif %}>Beginner</option>
+							<option value="Intermediate" {% if selected_level == 'Intermediate' %}selected{% endif %}>Intermediate</option>
+							<option value="Advanced" {% if selected_level == 'Advanced' %}selected{% endif %}>Advanced</option>
+						</select>
+						<button type="submit" class="courses_search_button">Filter</button>
+					</form>
+					{% if query or selected_category or selected_level or selected_price %}
+					<div class="mt-2 text-right">
+						<a href="{% url 'frontend:courses' %}" class="small text-danger font-weight-bold">
+							<i class="fa fa-times-circle mr-1"></i> Clear all filters
+						</a>
+					</div>
+					{% endif %}
+				</div>
+
+				<div class="courses_container">
+					<div class="row courses_row">
+						
+						{% for course in courses %}
+						<!-- Course Card -->
+						<div class="col-lg-6 course_col mb-4">
+							<div class="course h-100 d-flex flex-column" style="border-radius: 10px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,0.06); background: #ffffff;">
+								<div class="course_image position-relative" style="height: 190px; overflow: hidden;">
+									<a href="{% url 'frontend:course_detail' course.slug %}">
+										<img src="{{ course.get_thumbnail_url }}" alt="{{ course.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+									</a>
+									{% if course.category %}
+									<span class="badge badge-info position-absolute" style="top: 12px; left: 12px; padding: 5px 10px; font-size: 11px; z-index: 2;">
+										{{ course.category.name }}
+									</span>
+									{% endif %}
+									{% if course.is_featured %}
+									<span class="badge badge-warning position-absolute" style="top: 12px; right: 12px; padding: 5px 10px; font-size: 10px; font-weight: 700; z-index: 2;">
+										FEATURED
+									</span>
+									{% endif %}
+								</div>
+								<div class="course_body flex-grow-1 d-flex flex-column p-4">
+									<h3 class="course_title mb-2" style="font-size: 17px; line-height: 1.4;">
+										<a href="{% url 'frontend:course_detail' course.slug %}" style="color: #1e293b; font-weight: 700;">{{ course.title }}</a>
+									</h3>
+									<div class="course_teacher text-muted mb-2" style="font-size: 13px;">
+										<i class="fa fa-user-circle text-info mr-1"></i> {{ course.instructor_name }}
+									</div>
+									<div class="course_text text-muted mb-3" style="font-size: 13px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+										<p>{{ course.description }}</p>
+									</div>
+									<div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
+										<span class="badge badge-light border text-muted">
+											<i class="fa fa-signal mr-1"></i> {{ course.level }}
+										</span>
+										<span class="small text-muted">
+											<i class="fa fa-calendar mr-1"></i> {{ course.duration_weeks }} weeks
+										</span>
+									</div>
+								</div>
+								<div class="course_footer" style="background: #f8fafc; border-top: 1px solid #f1f5f9; padding: 12px 18px;">
+									<div class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+										<div class="course_info mr-3">
+											<i class="fa fa-graduation-cap text-muted mr-1" aria-hidden="true"></i>
+											<span class="small font-weight-bold">{{ course.total_students }}</span>
+										</div>
+										<div class="course_info">
+											<i class="fa fa-list text-muted mr-1" aria-hidden="true"></i>
+											<span class="small font-weight-bold">{{ course.total_lessons }} Lessons</span>
+										</div>
+										<div class="course_price ml-auto" style="font-size: 18px; font-weight: 700; color: #14bdee;">
+											{% if course.is_free %}
+											Free
+											{% else %}
+											${{ course.price }}
+											{% endif %}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% empty %}
+						<div class="col-12 py-5 text-center">
+							<div class="p-5 bg-white rounded shadow-sm">
+								<i class="fa fa-search fa-3x text-muted mb-3"></i>
+								<h3 class="font-weight-bold">No Courses Found</h3>
+								<p class="text-muted">No courses match your active search filters. Try adjusting keywords or viewing all categories.</p>
+								<a href="{% url 'frontend:courses' %}" class="btn btn-info mt-2">
+									<i class="fa fa-refresh mr-1"></i> View All Courses
+								</a>
+							</div>
+						</div>
+						{% endfor %}
+
+					</div>
+
+					<!-- Pagination Row -->
+					{% if courses.has_other_pages %}
+					<div class="row pagination_row mt-4">
+						<div class="col">
+							<div class="pagination_container d-flex flex-row align-items-center justify-content-between flex-wrap">
+								<ul class="pagination_list mb-2 mb-md-0">
+									{% if courses.has_previous %}
+									<li>
+										<a href="?page={{ courses.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_level %}&level={{ selected_level }}{% endif %}{% if selected_price %}&price_type={{ selected_price }}{% endif %}">
+											<i class="fa fa-angle-left" aria-hidden="true"></i>
+										</a>
+									</li>
+									{% endif %}
+
+									{% for num in courses.paginator.page_range %}
+									{% if courses.number == num %}
+									<li class="active"><a href="javascript:void(0)">{{ num }}</a></li>
+									{% elif num > courses.number|add:'-3' and num < courses.number|add:'3' %}
+									<li>
+										<a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_level %}&level={{ selected_level }}{% endif %}{% if selected_price %}&price_type={{ selected_price }}{% endif %}">{{ num }}</a>
+									</li>
+									{% endif %}
+									{% endfor %}
+
+									{% if courses.has_next %}
+									<li>
+										<a href="?page={{ courses.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_level %}&level={{ selected_level }}{% endif %}{% if selected_price %}&price_type={{ selected_price }}{% endif %}">
+											<i class="fa fa-angle-right" aria-hidden="true"></i>
+										</a>
+									</li>
+									{% endif %}
+								</ul>
+
+								<div class="courses_show_text text-muted small ml-auto">
+									Showing {{ courses.start_index }}-{{ courses.end_index }} of {{ courses.paginator.count }} courses
+								</div>
+							</div>
+						</div>
+					</div>
+					{% endif %}
+
+				</div>
+			</div>
+
+			<!-- Courses Sidebar -->
+			<div class="col-lg-4">
+				<div class="sidebar">
+
+					<!-- Categories Section -->
+					<div class="sidebar_section">
+						<div class="sidebar_section_title">Categories</div>
+						<div class="sidebar_categories">
+							<ul>
+								<li class="{% if not selected_category %}font-weight-bold text-info{% endif %}">
+									<a href="{% url 'frontend:courses' %}">
+										<span>All Categories</span>
+										<span class="float-right badge badge-light border">{{ total_count }}</span>
+									</a>
+								</li>
+								{% for cat in categories %}
+								<li class="{% if selected_category == cat.slug or selected_category == cat.id|stringformat:'s' %}font-weight-bold text-info{% endif %}">
+									<a href="{% url 'frontend:courses' %}?category={{ cat.slug }}">
+										<span><i class="fa {{ cat.icon|default:'fa-laptop' }} mr-2 text-muted"></i> {{ cat.name }}</span>
+										<span class="float-right badge badge-light border">{{ cat.course_count }}</span>
+									</a>
+								</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+
+					<!-- Pricing Filter -->
+					<div class="sidebar_section">
+						<div class="sidebar_section_title">Price Filter</div>
+						<div class="sidebar_categories">
+							<ul>
+								<li>
+									<a href="{% url 'frontend:courses' %}?price_type=free{% if selected_category %}&category={{ selected_category }}{% endif %}" class="{% if selected_price == 'free' %}font-weight-bold text-info{% endif %}">
+										<i class="fa fa-gift mr-2 text-success"></i> Free Courses
+									</a>
+								</li>
+								<li>
+									<a href="{% url 'frontend:courses' %}?price_type=paid{% if selected_category %}&category={{ selected_category }}{% endif %}" class="{% if selected_price == 'paid' %}font-weight-bold text-info{% endif %}">
+										<i class="fa fa-star mr-2 text-warning"></i> Premium Courses
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Latest Courses Section -->
+					<div class="sidebar_section">
+						<div class="sidebar_section_title">Recently Added</div>
+						<div class="sidebar_latest">
+
+							{% for lc in latest_courses %}
+							<div class="latest d-flex flex-row align-items-start justify-content-start mb-3 pb-3 border-bottom">
+								<div class="latest_image" style="width: 70px; height: 60px; border-radius: 6px; overflow: hidden; flex-shrink: 0;">
+									<a href="{% url 'frontend:course_detail' lc.slug %}">
+										<img src="{{ lc.get_thumbnail_url }}" alt="{{ lc.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+									</a>
+								</div>
+								<div class="latest_content ml-3">
+									<div class="latest_title font-weight-bold" style="font-size: 14px; line-height: 1.3;">
+										<a href="{% url 'frontend:course_detail' lc.slug %}" style="color: #1e293b;">{{ lc.title }}</a>
+									</div>
+									<div class="latest_price font-weight-bold mt-1" style="color: #14bdee; font-size: 13px;">
+										{% if lc.is_free %}Free{% else %}${{ lc.price }}{% endif %}
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'frontend/plugins/OwlCarousel2-2.2.1/owl.carousel.js' %}"></script>
+<script src="{% static 'frontend/plugins/colorbox/jquery.colorbox-min.js' %}"></script>
+{% endblock %}

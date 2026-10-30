@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Admin Portal Login - Zylora</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/bootstrap4/bootstrap.min.css' %}">
+<link href="{% static 'frontend/plugins/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+	body {
+		font-family: 'Inter', sans-serif;
+		background: linear-gradient(135deg, #090e1a 0%, #0f172a 100%);
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 20px;
+		margin: 0;
+	}
+	.login_box {
+		width: 100%;
+		max-width: 440px;
+		background: #ffffff;
+		border-radius: 18px;
+		padding: 45px 38px;
+		box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+		position: relative;
+	}
+	.login_box::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 6px;
+		background: linear-gradient(90deg, #14bdee 0%, #0d96be 100%);
+		border-top-left-radius: 18px;
+		border-top-right-radius: 18px;
+	}
+	.brand_logo {
+		text-align: center;
+		margin-bottom: 25px;
+	}
+	.brand_logo h1 {
+		font-size: 30px;
+		font-weight: 800;
+		color: #0f172a;
+		letter-spacing: -0.5px;
+		margin-bottom: 4px;
+	}
+	.brand_logo h1 span {
+		color: #14bdee;
+	}
+	.admin_badge {
+		display: inline-block;
+		background: #f1f5f9;
+		color: #475569;
+		font-size: 11px;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		padding: 4px 12px;
+		border-radius: 20px;
+	}
+	.form_label {
+		font-size: 13px;
+		font-weight: 600;
+		color: #334155;
+		margin-bottom: 6px;
+	}
+	.input_wrap {
+		position: relative;
+		margin-bottom: 20px;
+	}
+	.input_wrap i {
+		position: absolute;
+		left: 16px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: #94a3b8;
+		font-size: 16px;
+	}
+	.input_wrap input {
+		width: 100%;
+		height: 50px;
+		padding: 0 16px 0 45px;
+		border: 1.5px solid #e2e8f0;
+		border-radius: 10px;
+		font-size: 14px;
+		color: #1e293b;
+		background: #f8fafc;
+		transition: all 0.2s ease;
+	}
+	.input_wrap input:focus {
+		outline: none;
+		background: #ffffff;
+		border-color: #14bdee;
+		box-shadow: 0 0 0 3px rgba(20, 189, 238, 0.15);
+	}
+	.btn_signin {
+		width: 100%;
+		height: 50px;
+		background: linear-gradient(135deg, #14bdee 0%, #0d96be 100%);
+		border: none;
+		border-radius: 10px;
+		color: #ffffff;
+		font-size: 15px;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		box-shadow: 0 8px 20px rgba(20, 189, 238, 0.3);
+		margin-top: 10px;
+	}
+	.btn_signin:hover {
+		background: linear-gradient(135deg, #0d96be 0%, #0a7a9b 100%);
+		transform: translateY(-1px);
+		box-shadow: 0 10px 24px rgba(20, 189, 238, 0.4);
+	}
+	.back_link {
+		text-align: center;
+		margin-top: 25px;
+		font-size: 13px;
+	}
+	.back_link a {
+		color: #64748b;
+		text-decoration: none;
+		font-weight: 500;
+	}
+	.back_link a:hover {
+		color: #14bdee;
+	}
+</style>
+</head>
+<body>
+
+<div class="login_box">
+	<div class="brand_logo">
+		<h1>Zy<span>lora</span></h1>
+		<span class="admin_badge"><i class="fa fa-shield mr-1"></i> Management Portal</span>
+	</div>
+
+	{% if messages %}
+	<div class="mb-3">
+		{% for message in messages %}
+		<div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} py-2 px-3 small" role="alert">
+			{{ message }}
+		</div>
+		{% endfor %}
+	</div>
+	{% endif %}
+
+	<form method="post" action="{% url 'backend:admin_login' %}">
+		{% csrf_token %}
+		{% if request.GET.next %}
+		<input type="hidden" name="next" value="{{ request.GET.next }}">
+		{% endif %}
+
+		<div class="form-group mb-0">
+			<label class="form_label">Admin Username or Email</label>
+			<div class="input_wrap">
+				<i class="fa fa-user-secret"></i>
+				{{ form.username }}
+			</div>
+		</div>
+
+		<div class="form-group mb-0">
+			<label class="form_label">Password</label>
+			<div class="input_wrap">
+				<i class="fa fa-lock"></i>
+				{{ form.password }}
+			</div>
+		</div>
+
+		<button type="submit" class="btn_signin">
+			<i class="fa fa-sign-in mr-2"></i> Enter Admin Dashboard
+		</button>
+	</form>
+
+	<div class="back_link">
+		<a href="{% url 'frontend:index' %}"><i class="fa fa-arrow-left mr-1"></i> Back to Main Website</a>
+	</div>
+</div>
+
+</body>
+</html>

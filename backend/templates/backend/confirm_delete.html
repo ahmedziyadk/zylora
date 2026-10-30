@@ -1,0 +1,33 @@
+{% extends 'backend/base_admin.html' %}
+
+{% block title %}Confirm Deletion - Zylora Admin{% endblock %}
+{% block page_title %}Confirm Deletion{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+	<div class="col-lg-6 mx-auto">
+		<div class="dash_panel text-center py-5">
+			<div style="width: 70px; height: 70px; border-radius: 50%; background: #fee2e2; color: #b91c1c; font-size: 30px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+				<i class="fa fa-exclamation-triangle"></i>
+			</div>
+
+			<h3 style="font-size: 22px; font-weight: 700; color: #1e293b; margin-bottom: 10px;">
+				Are you sure you want to delete?
+			</h3>
+			<p class="text-muted mb-4" style="font-size: 15px;">
+				You are about to permanently remove: <br>
+				<strong class="text-danger">{{ object_name }}</strong><br>
+				This action cannot be undone.
+			</p>
+
+			<form method="post">
+				{% csrf_token %}
+				<a href="{% url cancel_url %}" class="btn btn-light px-4 mr-2" style="border: 1px solid #cbd5e1;">Cancel</a>
+				<button type="submit" class="btn btn-danger px-4">
+					<i class="fa fa-trash mr-1"></i> Confirm Delete
+				</button>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

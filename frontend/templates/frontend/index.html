@@ -1,0 +1,454 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}Zylora | Premium Online Learning Management System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/plugins/OwlCarousel2-2.2.1/owl.carousel.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/plugins/OwlCarousel2-2.2.1/owl.theme.default.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/plugins/OwlCarousel2-2.2.1/animate.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/main_styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/responsive.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Home -->
+
+<div class="home">
+	<div class="home_slider_container">
+
+		<!-- Home Slider -->
+		<div class="owl-carousel owl-theme home_slider">
+
+			<!-- Home Slider Item 1 -->
+			<div class="owl-item">
+				<div class="home_slider_background"
+					style="background-image:url({% static 'frontend/images/home_slider_1.jpg' %})"></div>
+				<div class="home_slider_content">
+					<div class="container">
+						<div class="row">
+							<div class="col text-center">
+								<div class="home_slider_title">Master High-Demand Skills with Zylora</div>
+								<div class="home_slider_subtitle">Future of Professional Online Learning & Engineering
+								</div>
+								<div class="home_slider_form_container">
+									<form action="{% url 'frontend:courses' %}" method="get" id="home_search_form_1"
+										class="home_search_form d-flex flex-lg-row flex-column align-items-center justify-content-between">
+										<div class="d-flex flex-row align-items-center justify-content-start">
+											<input type="search" name="q" class="home_search_input"
+												placeholder="Search Courses by Keyword...">
+											<select name="category" class="dropdown_item_select home_search_input">
+												<option value="">All Categories</option>
+												{% for cat in categories %}
+												<option value="{{ cat.slug }}">{{ cat.name }}</option>
+												{% endfor %}
+											</select>
+											<select name="price_type" class="dropdown_item_select home_search_input">
+												<option value="">All Prices</option>
+												<option value="free">Free Courses</option>
+												<option value="paid">Premium Courses</option>
+											</select>
+										</div>
+										<button type="submit" class="home_search_button">Search Courses</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Home Slider Item 2 -->
+			<div class="owl-item">
+				<div class="home_slider_background"
+					style="background-image:url({% static 'frontend/images/home_slider_1.jpg' %})"></div>
+				<div class="home_slider_content">
+					<div class="container">
+						<div class="row">
+							<div class="col text-center">
+								<div class="home_slider_title">Interactive Learning & Lesson Tracking</div>
+								<div class="home_slider_subtitle">Track Your Progress, Watch Lessons, and Earn
+									Certificates</div>
+								<div class="home_slider_form_container">
+									<form action="{% url 'frontend:courses' %}" method="get" id="home_search_form_2"
+										class="home_search_form d-flex flex-lg-row flex-column align-items-center justify-content-between">
+										<div class="d-flex flex-row align-items-center justify-content-start">
+											<input type="search" name="q" class="home_search_input"
+												placeholder="Search Courses by Keyword...">
+											<select name="category" class="dropdown_item_select home_search_input">
+												<option value="">All Categories</option>
+												{% for cat in categories %}
+												<option value="{{ cat.slug }}">{{ cat.name }}</option>
+												{% endfor %}
+											</select>
+											<select name="price_type" class="dropdown_item_select home_search_input">
+												<option value="">All Prices</option>
+												<option value="free">Free Courses</option>
+												<option value="paid">Premium Courses</option>
+											</select>
+										</div>
+										<button type="submit" class="home_search_button">Search Courses</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Home Slider Nav -->
+	<div class="home_slider_nav home_slider_prev"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
+	<div class="home_slider_nav home_slider_next"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+</div>
+
+<!-- Features -->
+
+<div class="features">
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="section_title_container text-center">
+					<h2 class="section_title">Welcome to Zylora Learning Management System</h2>
+					<div class="section_subtitle">
+						<p>Empowering learners with structured curricula, expert-led video lectures, hands-on lessons,
+							and self-paced career roadmaps.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row features_row">
+
+			<!-- Features Item -->
+			<div class="col-lg-3 feature_col">
+				<div class="feature text-center trans_400">
+					<div class="feature_icon"><img src="{% static 'frontend/images/icon_1.png' %}"
+							alt="Expert Instructors"></div>
+					<h3 class="feature_title">Expert Faculty</h3>
+					<div class="feature_text">
+						<p>Learn directly from seasoned industry engineers, specialists, and academic professionals.</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Features Item -->
+			<div class="col-lg-3 feature_col">
+				<div class="feature text-center trans_400">
+					<div class="feature_icon"><img src="{% static 'frontend/images/icon_2.png' %}" alt="Curriculum">
+					</div>
+					<h3 class="feature_title">Rich Curriculum</h3>
+					<div class="feature_text">
+						<p>Structured, step-by-step modular lessons equipped with notes, code, and video resources.</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Features Item -->
+			<div class="col-lg-3 feature_col">
+				<div class="feature text-center trans_400">
+					<div class="feature_icon"><img src="{% static 'frontend/images/icon_3.png' %}" alt="Best Courses">
+					</div>
+					<h3 class="feature_title">Industry Aligned</h3>
+					<div class="feature_text">
+						<p>Modern courses spanning Full-Stack Web, AI, DevOps, Electric Vehicles, and UI/UX Design.</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Features Item -->
+			<div class="col-lg-3 feature_col">
+				<div class="feature text-center trans_400">
+					<div class="feature_icon"><img src="{% static 'frontend/images/icon_4.png' %}"
+							alt="Progress Tracking"></div>
+					<h3 class="feature_title">Progress Tracking</h3>
+					<div class="feature_text">
+						<p>Mark lessons completed, track your learning journey live, and view your student dashboard.
+						</p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- Popular Courses -->
+
+<div class="courses">
+	<div class="section_background parallax-window" data-parallax="scroll"
+		data-image-src="{% static 'frontend/images/courses_background.jpg' %}" data-speed="0.8"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="section_title_container text-center">
+					<h2 class="section_title">Featured Online Courses</h2>
+					<div class="section_subtitle">
+						<p>Browse our current catalog of database-driven courses taught by industry veterans.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row courses_row">
+
+			{% for course in featured_courses %}
+			<!-- Dynamic Course Card -->
+			<div class="col-lg-4 col-md-6 course_col mb-4">
+				<div class="course h-100 d-flex flex-column"
+					style="border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); background: #ffffff;">
+					<div class="course_image position-relative" style="height: 200px; overflow: hidden;">
+						<a href="{% url 'frontend:course_detail' course.slug %}">
+							<img src="{{ course.get_thumbnail_url }}" alt="{{ course.title }}"
+								style="width: 100%; height: 100%; object-fit: cover;">
+						</a>
+						{% if course.category %}
+						<span class="badge badge-info position-absolute"
+							style="top: 14px; left: 14px; padding: 6px 12px; font-size: 11px; border-radius: 4px; z-index: 2;">
+							{{ course.category.name }}
+						</span>
+						{% endif %}
+					</div>
+					<div class="course_body flex-grow-1 d-flex flex-column p-4">
+						<h3 class="course_title mb-2" style="font-size: 18px; line-height: 1.4;">
+							<a href="{% url 'frontend:course_detail' course.slug %}"
+								style="color: #1e293b; font-weight: 700;">{{ course.title }}</a>
+						</h3>
+						<div class="course_teacher text-muted mb-2" style="font-size: 13px;">
+							<i class="fa fa-user-circle-o text-info mr-1"></i> {{ course.instructor_name }}
+						</div>
+						<div class="course_text text-muted mb-3"
+							style="font-size: 13px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+							<p>{{ course.description }}</p>
+						</div>
+						<div class="mt-auto">
+							<div class="d-flex align-items-center justify-content-between pt-2 border-top">
+								<span class="badge badge-light border text-muted">
+									<i class="fa fa-signal mr-1"></i> {{ course.level }}
+								</span>
+								<span class="text-muted small">
+									<i class="fa fa-clock-o mr-1"></i> {{ course.duration_weeks }} wks
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="course_footer"
+						style="background: #f8fafc; border-top: 1px solid #f1f5f9; padding: 12px 20px;">
+						<div class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+							<div class="course_info mr-3">
+								<i class="fa fa-graduation-cap text-muted" aria-hidden="true"></i>
+								<span class="small font-weight-bold">{{ course.total_students }} Student{{
+									course.total_students|pluralize }}</span>
+							</div>
+							<div class="course_info">
+								<i class="fa fa-list text-muted" aria-hidden="true"></i>
+								<span class="small font-weight-bold">{{ course.total_lessons }} Lesson{{
+									course.total_lessons|pluralize }}</span>
+							</div>
+							<div class="course_price ml-auto"
+								style="font-size: 18px; font-weight: 700; color: #14bdee;">
+								{% if course.is_free %}
+								Free
+								{% else %}
+								${{ course.price }}
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% empty %}
+			<div class="col-12 text-center py-5">
+				<div class="p-5 bg-white rounded shadow-sm">
+					<i class="fa fa-book fa-3x text-info mb-3"></i>
+					<h3>No Published Courses Yet</h3>
+					<p class="text-muted">Courses will appear dynamically here as administrators add and publish them.
+					</p>
+				</div>
+			</div>
+			{% endfor %}
+
+		</div>
+		<div class="row mt-4">
+			<div class="col text-center">
+				<div class="courses_button trans_200 d-inline-block">
+					<a href="{% url 'frontend:courses' %}">View All Courses ({{ total_courses }})</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Counter -->
+
+<div class="counter">
+	<div class="counter_background" style="background-image:url({% static 'frontend/images/counter_background.jpg' %})">
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="counter_content">
+					<h2 class="counter_title">Join Zylora Today</h2>
+					<div class="counter_text">
+						<p>Register as a student to enroll in industry-vetted courses, access comprehensive modular
+							lessons, follow your live curriculum progress, and elevate your professional career.</p>
+					</div>
+
+					<!-- Milestones -->
+					<div class="milestones d-flex flex-md-row flex-column align-items-center justify-content-between">
+
+						<!-- Milestone -->
+						<div class="milestone">
+							<div class="milestone_counter" data-end-value="{{ total_courses|default:'6' }}">{{
+								total_courses|default:'6' }}</div>
+							<div class="milestone_text">Courses</div>
+						</div>
+
+						<!-- Milestone -->
+						<div class="milestone">
+							<div class="milestone_counter" data-end-value="{{ total_students|default:'10' }}">{{
+								total_students|default:'10' }}</div>
+							<div class="milestone_text">Students</div>
+						</div>
+
+						<!-- Milestone -->
+						<div class="milestone">
+							<div class="milestone_counter" data-end-value="{{ total_categories|default:'5' }}">{{
+								total_categories|default:'5' }}</div>
+							<div class="milestone_text">Categories</div>
+						</div>
+
+						<!-- Milestone -->
+						<div class="milestone">
+							<div class="milestone_counter" data-end-value="{{ total_lessons|default:'24' }}">{{
+								total_lessons|default:'24' }}</div>
+							<div class="milestone_text">Lessons</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="counter_form">
+			<div class="row fill_height">
+				<div class="col fill_height">
+					<form class="counter_form_content d-flex flex-column align-items-center justify-content-center"
+						action="{% url 'frontend:contact' %}" method="post">
+						{% csrf_token %}
+						<div class="counter_form_title">Quick Inquiry</div>
+						<input type="text" name="name" class="counter_input" placeholder="Your Full Name:"
+							required="required">
+						<input type="email" name="email" class="counter_input" placeholder="Your Email Address:"
+							required="required">
+						<select name="subject" id="counter_select" class="counter_input counter_options">
+							<option value="General Inquiry">Select Interest / Subject</option>
+							{% for cat in categories %}
+							<option value="{{ cat.name }}">{{ cat.name }}</option>
+							{% endfor %}
+						</select>
+						<textarea name="message" class="counter_input counter_text_input"
+							placeholder="Tell us how we can assist you..." required="required"></textarea>
+						<button type="submit" class="counter_form_button">Send Message</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<!-- Learning Categories Section -->
+
+<div class="events">
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="section_title_container text-center">
+					<h2 class="section_title">Browse Course Disciplines</h2>
+					<div class="section_subtitle">
+						<p>Explore specialized technical fields curated for modern career pathways.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row events_row">
+
+			{% for cat in categories %}
+			<div class="col-lg-4 col-md-6 mb-4">
+				<div class="card h-100 border-0 shadow-sm p-4 text-center"
+					style="border-radius: 12px; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+					<div class="mx-auto mb-3"
+						style="width: 60px; height: 60px; border-radius: 14px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 26px;">
+						<i class="fa {{ cat.icon|default:'fa-laptop' }}"></i>
+					</div>
+					<h4 style="font-weight: 700; color: #1e293b; font-size: 18px; margin-bottom: 8px;">{{ cat.name }}
+					</h4>
+					<p class="text-muted small mb-3">{{ cat.description|default:"Curated modular courses and hands-on
+						practical lessons." }}</p>
+					<div class="mt-auto">
+						<a href="{% url 'frontend:courses' %}?category={{ cat.slug }}"
+							class="btn btn-sm btn-outline-info font-weight-bold" style="border-radius: 6px;">
+							Explore {{ cat.course_count }} Course{{ cat.course_count|pluralize }}
+						</a>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+
+		</div>
+	</div>
+</div>
+
+<!-- Newsletter -->
+
+<div class="newsletter">
+	<div class="newsletter_background parallax-window" data-parallax="scroll"
+		data-image-src="{% static 'frontend/images/newsletter.jpg' %}" data-speed="0.8"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div
+					class="newsletter_container d-flex flex-lg-row flex-column align-items-center justify-content-start">
+
+					<!-- Newsletter Content -->
+					<div class="newsletter_content text-lg-left text-center">
+						<div class="newsletter_title">Ready to Begin Your Learning Journey?</div>
+						<div class="newsletter_subtitle">Create your student account today and access complete
+							curricula.</div>
+					</div>
+
+					<!-- Action Button -->
+					<div class="newsletter_form_container ml-lg-auto">
+						{% if request.user.is_authenticated %}
+						<a href="{% url 'frontend:dashboard' %}"
+							class="newsletter_button d-inline-flex align-items-center justify-content-center"
+							style="line-height: 48px; text-decoration: none;">
+							Go to Dashboard <i class="fa fa-arrow-right ml-2"></i>
+						</a>
+						{% else %}
+						<a href="{% url 'frontend:register' %}"
+							class="newsletter_button d-inline-flex align-items-center justify-content-center"
+							style="line-height: 48px; text-decoration: none;">
+							Register for Free <i class="fa fa-user-plus ml-2"></i>
+						</a>
+						{% endif %}
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'frontend/plugins/greensock/TweenMax.min.js' %}"></script>
+<script src="{% static 'frontend/plugins/greensock/TimelineMax.min.js' %}"></script>
+<script src="{% static 'frontend/plugins/scrollmagic/ScrollMagic.min.js' %}"></script>
+<script src="{% static 'frontend/plugins/greensock/animation.gsap.min.js' %}"></script>
+<script src="{% static 'frontend/plugins/greensock/ScrollToPlugin.min.js' %}"></script>
+<script src="{% static 'frontend/plugins/OwlCarousel2-2.2.1/owl.carousel.js' %}"></script>
+<script src="{% static 'frontend/js/custom.js' %}"></script>
+{% endblock %}

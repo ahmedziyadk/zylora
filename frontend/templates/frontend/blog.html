@@ -1,0 +1,252 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}Academic & Engineering Insights - Zylora Blog{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'frontend/plugins/video-js/video-js.css' %}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/blog.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/blog_responsive.css' %}">
+<style>
+	.blog_post {
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+		background: #ffffff;
+		border: 1px solid #f1f5f9;
+		margin-bottom: 30px;
+	}
+	.blog_badge {
+		display: inline-block;
+		padding: 4px 10px;
+		font-size: 11px;
+		font-weight: 700;
+		border-radius: 4px;
+		background: #e0f2fe;
+		color: #0284c7;
+		margin-bottom: 12px;
+		text-transform: uppercase;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Home -->
+<div class="home">
+	<div class="breadcrumbs_container">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="breadcrumbs">
+						<ul>
+							<li><a href="{% url 'frontend:index' %}">Home</a></li>
+							<li>Articles & Insights</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>			
+</div>
+
+<!-- Blog -->
+<div class="blog">
+	<div class="container">
+		<div class="row mb-5">
+			<div class="col text-center">
+				<h2 class="section_title">Zylora Learning & Tech Insights</h2>
+				<div class="section_subtitle mt-2">
+					<p>Technical deep dives, curriculum overviews, and career roadmaps curated by our faculty and engineers.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<div class="blog_post_container">
+
+					<!-- Blog Post 1 -->
+					<div class="blog_post trans_200">
+						<div class="blog_post_image">
+							<a href="{% url 'frontend:blog_single' %}">
+								<img src="{% static 'frontend/images/blog_1.jpg' %}" alt="Full Stack Web Architecture">
+							</a>
+						</div>
+						<div class="blog_post_body p-4">
+							<span class="blog_badge">Software Engineering</span>
+							<div class="blog_post_title">
+								<a href="{% url 'frontend:blog_single' %}" style="color: #1e293b; font-weight: 700;">Building Scalable Web Architecture with Django & Modern JavaScript</a>
+							</div>
+							<div class="blog_post_meta mb-3">
+								<ul class="d-flex align-items-center text-muted small pl-0 list-unstyled">
+									<li class="mr-3"><i class="fa fa-user-circle text-info mr-1"></i> Zylora Faculty</li>
+									<li><i class="fa fa-calendar-o mr-1"></i> Oct 24, 2026</li>
+								</ul>
+							</div>
+							<div class="blog_post_text text-muted" style="line-height: 1.6; font-size: 14px;">
+								<p>Discover how database optimization, query caching, modular apps, and secure authentication create production-grade web systems capable of serving thousands of concurrent learners.</p>
+							</div>
+							<div class="mt-3 pt-3 border-top">
+								<a href="{% url 'frontend:blog_single' %}" class="btn btn-sm btn-outline-info font-weight-bold" style="border-radius: 6px;">
+									Read Article <i class="fa fa-arrow-right ml-1"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- Blog Post 2 -->
+					<div class="blog_post trans_200">
+						<div class="blog_post_body p-4">
+							<span class="blog_badge" style="background: #fdf4ff; color: #a21caf;">Data Science & AI</span>
+							<div class="blog_post_title">
+								<a href="{% url 'frontend:blog_single' %}" style="color: #1e293b; font-weight: 700;">From Neural Networks to Production ML: What Industry Demands</a>
+							</div>
+							<div class="blog_post_meta mb-3">
+								<ul class="d-flex align-items-center text-muted small pl-0 list-unstyled">
+									<li class="mr-3"><i class="fa fa-user-circle text-info mr-1"></i> Dr. Sarah Chen</li>
+									<li><i class="fa fa-calendar-o mr-1"></i> Oct 18, 2026</li>
+								</ul>
+							</div>
+							<div class="blog_post_text text-muted" style="line-height: 1.6; font-size: 14px;">
+								<p>Model training is only 15% of the machine learning pipeline. Learn why ML monitoring, feature stores, and automated model registry are crucial for modern AI engineers.</p>
+							</div>
+							<div class="mt-3 pt-3 border-top">
+								<a href="{% url 'frontend:blog_single' %}" class="btn btn-sm btn-outline-info font-weight-bold" style="border-radius: 6px;">
+									Read Article <i class="fa fa-arrow-right ml-1"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- Blog Post 3 -->
+					<div class="blog_post trans_200">
+						<div class="blog_post_image">
+							<a href="{% url 'frontend:blog_single' %}">
+								<img src="{% static 'frontend/images/blog_2.jpg' %}" alt="Electric Vehicle Engineering">
+							</a>
+						</div>
+						<div class="blog_post_body p-4">
+							<span class="blog_badge" style="background: #ecfdf5; color: #047857;">Electric Vehicles</span>
+							<div class="blog_post_title">
+								<a href="{% url 'frontend:blog_single' %}" style="color: #1e293b; font-weight: 700;">Electric Vehicle Powertrains: Thermal Management & Battery Telemetry</a>
+							</div>
+							<div class="blog_post_meta mb-3">
+								<ul class="d-flex align-items-center text-muted small pl-0 list-unstyled">
+									<li class="mr-3"><i class="fa fa-user-circle text-info mr-1"></i> Marcus Vance</li>
+									<li><i class="fa fa-calendar-o mr-1"></i> Oct 12, 2026</li>
+								</ul>
+							</div>
+							<div class="blog_post_text text-muted" style="line-height: 1.6; font-size: 14px;">
+								<p>High-voltage battery architecture requires real-time telemetry, advanced state-of-charge algorithms, and regenerative braking control loops.</p>
+							</div>
+							<div class="mt-3 pt-3 border-top">
+								<a href="{% url 'frontend:blog_single' %}" class="btn btn-sm btn-outline-info font-weight-bold" style="border-radius: 6px;">
+									Read Article <i class="fa fa-arrow-right ml-1"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- Blog Post 4 -->
+					<div class="blog_post trans_200">
+						<div class="blog_post_image">
+							<a href="{% url 'frontend:blog_single' %}">
+								<img src="{% static 'frontend/images/blog_3.jpg' %}" alt="DevOps and Cloud">
+							</a>
+						</div>
+						<div class="blog_post_body p-4">
+							<span class="blog_badge" style="background: #fff7ed; color: #c2410c;">Cloud & DevOps</span>
+							<div class="blog_post_title">
+								<a href="{% url 'frontend:blog_single' %}" style="color: #1e293b; font-weight: 700;">Container Orchestration with Docker & Kubernetes for Beginners</a>
+							</div>
+							<div class="blog_post_meta mb-3">
+								<ul class="d-flex align-items-center text-muted small pl-0 list-unstyled">
+									<li class="mr-3"><i class="fa fa-user-circle text-info mr-1"></i> Zylora Cloud Team</li>
+									<li><i class="fa fa-calendar-o mr-1"></i> Oct 05, 2026</li>
+								</ul>
+							</div>
+							<div class="blog_post_text text-muted" style="line-height: 1.6; font-size: 14px;">
+								<p>A step-by-step primer on writing clean Dockerfiles, configuring multi-stage builds, setting up health checks, and deploying microservices safely.</p>
+							</div>
+							<div class="mt-3 pt-3 border-top">
+								<a href="{% url 'frontend:blog_single' %}" class="btn btn-sm btn-outline-info font-weight-bold" style="border-radius: 6px;">
+									Read Article <i class="fa fa-arrow-right ml-1"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- Blog Post 5 -->
+					<div class="blog_post trans_200">
+						<div class="blog_post_image">
+							<a href="{% url 'frontend:blog_single' %}">
+								<img src="{% static 'frontend/images/blog_4.jpg' %}" alt="UI UX Design">
+							</a>
+						</div>
+						<div class="blog_post_body p-4">
+							<span class="blog_badge" style="background: #fdf2f8; color: #be185d;">UI/UX Design</span>
+							<div class="blog_post_title">
+								<a href="{% url 'frontend:blog_single' %}" style="color: #1e293b; font-weight: 700;">Building Cohesive Design Systems: Micro-Interactions & Accessibility</a>
+							</div>
+							<div class="blog_post_meta mb-3">
+								<ul class="d-flex align-items-center text-muted small pl-0 list-unstyled">
+									<li class="mr-3"><i class="fa fa-user-circle text-info mr-1"></i> Elena Rostova</li>
+									<li><i class="fa fa-calendar-o mr-1"></i> Sep 28, 2026</li>
+								</ul>
+							</div>
+							<div class="blog_post_text text-muted" style="line-height: 1.6; font-size: 14px;">
+								<p>Learn how to define typography scales, consistent spacing variables, color tokens, and smooth micro-animations that make web applications feel premium and responsive.</p>
+							</div>
+							<div class="mt-3 pt-3 border-top">
+								<a href="{% url 'frontend:blog_single' %}" class="btn btn-sm btn-outline-info font-weight-bold" style="border-radius: 6px;">
+									Read Article <i class="fa fa-arrow-right ml-1"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-4">
+			<div class="col text-center">
+				<a href="{% url 'frontend:courses' %}" class="btn btn-info font-weight-bold px-4 py-3 shadow-sm" style="background: #14bdee; border-radius: 8px;">
+					Explore Related Courses & Curricula <i class="fa fa-book ml-2"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Newsletter -->
+<div class="newsletter">
+	<div class="newsletter_background" style="background-image:url({% static 'frontend/images/newsletter_background.jpg' %})"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<div class="newsletter_container d-flex flex-lg-row flex-column align-items-center justify-content-start">
+
+					<div class="newsletter_content text-lg-left text-center">
+						<div class="newsletter_title">Ready to Learn Hands-On?</div>
+						<div class="newsletter_subtitle">Enroll in our dynamic courses and start tracking your lessons today.</div>
+					</div>
+
+					<div class="newsletter_form_container ml-lg-auto">
+						<a href="{% url 'frontend:courses' %}" class="newsletter_button d-inline-flex align-items-center justify-content-center text-white" style="text-decoration: none; line-height: 48px;">
+							View All Courses <i class="fa fa-arrow-right ml-2"></i>
+						</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'frontend/plugins/masonry/masonry.js' %}"></script>
+<script src="{% static 'frontend/plugins/video-js/video.min.js' %}"></script>
+<script src="{% static 'frontend/js/blog.js' %}"></script>
+{% endblock %}

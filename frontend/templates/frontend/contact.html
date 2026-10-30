@@ -1,0 +1,148 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - Zylora{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/contact.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/contact_responsive.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Home -->
+
+	<div class="home">
+		<div class="breadcrumbs_container">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="breadcrumbs">
+							<ul>
+								<li><a href="{% url 'frontend:index' %}">Home</a></li>
+								<li>Contact</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>			
+	</div>
+
+	<!-- Contact -->
+
+	<div class="contact">
+		
+		<!-- Contact Map -->
+
+		<div class="contact_map">
+
+			<!-- Google Map -->
+			
+			<div class="map">
+				<div id="google_map" class="google_map">
+					<div class="map_container">
+						<div id="map"></div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Contact Info -->
+
+		<div class="contact_info_container">
+			<div class="container">
+				<div class="row">
+
+					<!-- Contact Form -->
+					<div class="col-lg-6">
+						<div class="contact_form">
+							<div class="contact_info_title">Send Us a Message</div>
+							<form method="post" action="{% url 'frontend:contact' %}" class="comment_form">
+								{% csrf_token %}
+								<div>
+									<div class="form_title">Your Full Name *</div>
+									<input type="text" name="name" class="comment_input" placeholder="e.g. Alex Morgan" required="required">
+								</div>
+								<div>
+									<div class="form_title">Your Email Address *</div>
+									<input type="email" name="email" class="comment_input" placeholder="e.g. alex@example.com" required="required">
+								</div>
+								<div>
+									<div class="form_title">Subject</div>
+									<input type="text" name="subject" class="comment_input" placeholder="e.g. Course Enrollment or Support" value="General Inquiry">
+								</div>
+								<div>
+									<div class="form_title">Message *</div>
+									<textarea name="message" class="comment_input comment_textarea" placeholder="How can our educational team assist you?" required="required"></textarea>
+								</div>
+								<div>
+									<button type="submit" class="comment_button trans_200">Submit Message</button>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<!-- Contact Info -->
+					<div class="col-lg-6">
+						<div class="contact_info">
+							<div class="contact_info_title">Zylora Support Center</div>
+							<div class="contact_info_text">
+								<p>Have inquiries regarding course syllabi, enrollment, instructor onboarding, or technical assistance? Our academic and student success team is available Monday through Friday.</p>
+							</div>
+							<div class="contact_info_location">
+								<div class="contact_info_location_title">Headquarters & Admissions</div>
+								<ul class="location_list">
+									<li>Zylora Global Campus, Innovation Plaza, Suite 400</li>
+									<li>+1 (800) 555-0199</li>
+									<li>support@zylora.com</li>
+								</ul>
+							</div>
+							<div class="contact_info_location">
+								<div class="contact_info_location_title">Student Academic Services</div>
+								<ul class="location_list">
+									<li>Admissions, Certification, and Institutional Inquiries</li>
+									<li>admissions@zylora.com</li>
+									<li>Hours: Mon - Fri: 8:00 AM - 6:00 PM EST</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Newsletter -->
+
+	<div class="newsletter">
+		<div class="newsletter_background" style="background-image:url({% static 'frontend/images/newsletter_background.jpg' %})"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="newsletter_container d-flex flex-lg-row flex-column align-items-center justify-content-start">
+
+						<!-- Newsletter Content -->
+						<div class="newsletter_content text-lg-left text-center">
+							<div class="newsletter_title">Stay Updated with Zylora Academics</div>
+							<div class="newsletter_subtitle">Subscribe for newly released curricula, tech career insights, and learning resources</div>
+						</div>
+
+						<!-- Action Link -->
+						<div class="newsletter_form_container ml-lg-auto">
+							<a href="{% url 'frontend:register' %}" class="newsletter_button d-inline-flex align-items-center justify-content-center text-white" style="text-decoration: none; line-height: 48px;">
+								Join Free Today <i class="fa fa-arrow-right ml-2"></i>
+							</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script>
+<script src="{% static 'frontend/js/contact.js' %}"></script>
+{% endblock %}

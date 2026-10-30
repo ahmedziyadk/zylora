@@ -1,0 +1,333 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>{% block title %}Zylora | Online Learning{% endblock %}</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="Zylora online learning platform">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/bootstrap4/bootstrap.min.css' %}">
+	<link href="{% static 'frontend/plugins/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet"
+		type="text/css">
+	{% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+	<div class="super_container">
+
+		<!-- Header -->
+		<header class="header">
+
+			<!-- Top Bar -->
+			<!-- Top Bar -->
+			<div class="top_bar">
+				<div class="top_bar_container">
+					<div class="container">
+						<div class="row">
+							<div class="col">
+								<div class="top_bar_content d-flex flex-row align-items-center justify-content-start">
+									<ul class="top_bar_contact_list">
+										<li>
+											<div class="question">Questions? We are here to help:</div>
+										</li>
+										<li>
+											<i class="fa fa-phone" aria-hidden="true"></i>
+											<div>+1 (800) 555-0199</div>
+										</li>
+										<li>
+											<i class="fa fa-envelope-o" aria-hidden="true"></i>
+											<div>support@zylora.com</div>
+										</li>
+									</ul>
+									<div class="top_bar_login ml-auto">
+										{% if request.user.is_authenticated %}
+										<div class="d-flex flex-row align-items-center">
+											<a href="{% url 'frontend:dashboard' %}"
+												style="color: #ffffff; font-size: 13px; font-weight: 500; margin-right: 15px;">
+												<i class="fa fa-user-circle mr-1" style="color: #14bdee;"></i> {{ request.user.first_name|default:request.user.username }}
+											</a>
+											{% if request.user.is_staff %}
+											<div class="login_button mr-2"><a href="{% url 'backend:dashboard' %}"
+													style="background: #0f172a; border: 1px solid #38bdf8; color: #38bdf8;"><i
+														class="fa fa-shield mr-1"></i> Admin Panel</a></div>
+											{% endif %}
+											<div class="login_button"><a
+													href="{% url 'frontend:dashboard' %}">Dashboard</a></div>
+											<div class="login_button ml-2"><a
+													href="{% url 'frontend:logout' %}">Logout</a></div>
+										</div>
+										{% else %}
+										<div class="d-flex flex-row align-items-center">
+											<div class="login_button"><a href="{% url 'frontend:login' %}">Login</a></div>
+										</div>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Header Content -->
+			<div class="header_container">
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<div class="header_content d-flex flex-row align-items-center justify-content-start">
+								<div class="logo_container">
+									<a href="{% url 'frontend:index' %}">
+										<div class="logo_text">Zy<span>lora</span></div>
+									</a>
+								</div>
+								<nav class="main_nav_contaner ml-auto">
+									<ul class="main_nav">
+										<li
+											class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+											<a href="{% url 'frontend:index' %}">Home</a>
+										</li>
+										<li
+											class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+											<a href="{% url 'frontend:about' %}">About</a>
+										</li>
+										<li
+											class="{% if request.resolver_match.url_name in 'courses,course_detail' %}active{% endif %}">
+											<a href="{% url 'frontend:courses' %}">Courses</a>
+										</li>
+										{% if request.user.is_authenticated %}
+										<li
+											class="{% if request.resolver_match.url_name in 'dashboard,lesson_learning' %}active{% endif %}">
+											<a href="{% url 'frontend:dashboard' %}">My Learning</a>
+										</li>
+										{% endif %}
+										<li
+											class="{% if request.resolver_match.url_name in 'blog,blog_single' %}active{% endif %}">
+											<a href="{% url 'frontend:blog' %}">Blog</a>
+										</li>
+										<li
+											class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+											<a href="{% url 'frontend:contact' %}">Contact</a>
+										</li>
+									</ul>
+									<div class="search_button"><i class="fa fa-search" aria-hidden="true"></i></div>
+
+									<div class="hamburger menu_mm">
+										<i class="fa fa-bars menu_mm" aria-hidden="true"></i>
+									</div>
+								</nav>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Header Search Panel -->
+			<div class="header_search_container">
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<div class="header_search_content d-flex flex-row align-items-center justify-content-end">
+								<form action="{% url 'frontend:courses' %}" method="get" class="header_search_form">
+									<input type="search" name="q" class="search_input" placeholder="Search courses..." required="required">
+									<button
+										class="header_search_button d-flex flex-column align-items-center justify-content-center" type="submit">
+										<i class="fa fa-search" aria-hidden="true"></i>
+									</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<!-- Menu -->
+
+		<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
+			<div class="menu_close_container">
+				<div class="menu_close">
+					<div></div>
+					<div></div>
+				</div>
+			</div>
+			<div class="search">
+				<form action="{% url 'frontend:courses' %}" method="get" class="header_search_form menu_mm">
+					<input type="search" name="q" class="search_input menu_mm" placeholder="Search courses..." required="required">
+					<button
+						class="header_search_button d-flex flex-column align-items-center justify-content-center menu_mm" type="submit">
+						<i class="fa fa-search menu_mm" aria-hidden="true"></i>
+					</button>
+				</form>
+			</div>
+			<nav class="menu_nav">
+				<ul class="menu_mm">
+					<li class="menu_mm"><a href="{% url 'frontend:index' %}">Home</a></li>
+					<li class="menu_mm"><a href="{% url 'frontend:about' %}">About</a></li>
+					<li class="menu_mm"><a href="{% url 'frontend:courses' %}">Courses</a></li>
+					<li class="menu_mm"><a href="{% url 'frontend:blog' %}">Blog</a></li>
+					<li class="menu_mm"><a href="{% url 'frontend:contact' %}">Contact</a></li>
+					{% if request.user.is_authenticated %}
+					{% if request.user.is_staff %}
+					<li class="menu_mm"><a href="{% url 'backend:dashboard' %}" style="color: #14bdee;"><i
+								class="fa fa-shield"></i> Admin Panel</a></li>
+					{% endif %}
+					<li class="menu_mm"><a href="{% url 'frontend:dashboard' %}"><i class="fa fa-user-circle"></i>
+							Dashboard ({{ request.user.first_name|default:request.user.username }})</a></li>
+					<li class="menu_mm"><a href="{% url 'frontend:logout' %}"><i class="fa fa-sign-out"></i> Logout</a>
+					</li>
+					{% else %}
+					<li class="menu_mm"><a href="{% url 'frontend:login' %}"><i class="fa fa-sign-in"></i> Login</a></li>
+					{% endif %}
+				</ul>
+			</nav>
+		</div>
+
+		<!-- Django Messages -->
+		{% if messages %}
+		<div class="container" style="padding-top: 15px; position: relative; z-index: 9999;">
+			{% for message in messages %}
+			<div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show shadow-sm"
+				role="alert" style="border-radius: 8px;">
+				{% if message.tags == 'success' %}
+				<i class="fa fa-check-circle mr-2"></i>
+				{% elif message.tags == 'error' %}
+				<i class="fa fa-exclamation-circle mr-2"></i>
+				{% else %}
+				<i class="fa fa-info-circle mr-2"></i>
+				{% endif %}
+				{{ message }}
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			{% endfor %}
+		</div>
+		{% endif %}
+
+		{% block content %}{% endblock %}
+
+		<!-- Footer -->
+
+		<footer class="footer">
+			<div class="footer_background"
+				style="background-image:url({% static 'frontend/images/footer_background.png' %})"></div>
+			<div class="container">
+				<div class="row footer_row">
+					<div class="col">
+						<div class="footer_content">
+							<div class="row">
+
+								<div class="col-lg-3 footer_col">
+
+									<!-- Footer About -->
+									<div class="footer_section footer_about">
+										<div class="footer_logo_container">
+											<a href="{% url 'frontend:index' %}">
+												<div class="footer_logo_text">Zy<span>lora</span></div>
+											</a>
+										</div>
+										<div class="footer_about_text">
+											<p>Zylora is an industry-leading Online Learning Management System dedicated to advancing modern engineering, computer science, and digital business skills.</p>
+										</div>
+										<div class="footer_social">
+											<ul>
+												<li><a href="https://linkedin.com" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+												<li><a href="https://github.com" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a></li>
+												<li><a href="https://twitter.com" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+												<li><a href="https://youtube.com" target="_blank"><i class="fa fa-youtube-play" aria-hidden="true"></i></a></li>
+											</ul>
+										</div>
+									</div>
+
+								</div>
+
+								<div class="col-lg-3 footer_col">
+
+									<!-- Footer Contact -->
+									<div class="footer_section footer_contact">
+										<div class="footer_title">Contact Information</div>
+										<div class="footer_contact_info">
+											<ul>
+												<li>Email: support@zylora.com</li>
+												<li>Phone: +1 (800) 555-0199</li>
+												<li>Zylora Learning Center, Innovation Plaza</li>
+											</ul>
+										</div>
+									</div>
+
+								</div>
+
+								<div class="col-lg-3 footer_col">
+
+									<!-- Footer links -->
+									<div class="footer_section footer_links">
+										<div class="footer_title">Navigation</div>
+										<div class="footer_links_container">
+											<ul>
+												<li><a href="{% url 'frontend:index' %}">Home</a></li>
+												<li><a href="{% url 'frontend:about' %}">About Zylora</a></li>
+												<li><a href="{% url 'frontend:courses' %}">All Courses</a></li>
+												<li><a href="{% url 'frontend:blog' %}">Articles & Updates</a></li>
+												<li><a href="{% url 'frontend:contact' %}">Contact Us</a></li>
+												<li><a href="{% url 'backend:admin_login' %}"><i
+															class="fa fa-lock mr-1"></i> Admin Portal</a></li>
+											</ul>
+										</div>
+									</div>
+
+								</div>
+
+								<div class="col-lg-3 footer_col clearfix">
+
+									<!-- Footer Programs -->
+									<div class="footer_section footer_mobile">
+										<div class="footer_title">Learning Platform</div>
+										<div class="footer_about_text" style="color: #a5b4fc; font-size: 13px; line-height: 1.8;">
+											<p><i class="fa fa-check text-info mr-2"></i> Database-driven curriculum</p>
+											<p><i class="fa fa-check text-info mr-2"></i> Self-paced video & text lessons</p>
+											<p><i class="fa fa-check text-info mr-2"></i> Instant enrollment & tracking</p>
+											<p><i class="fa fa-check text-info mr-2"></i> Dedicated instructor reviews</p>
+										</div>
+									</div>
+
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row copyright_row">
+					<div class="col">
+						<div class="copyright d-flex flex-lg-row flex-column align-items-center justify-content-start">
+							<div class="cr_text">
+								&copy; {% now "Y" %} Zylora Online Learning Management System. All rights reserved.
+							</div>
+							<div class="ml-lg-auto cr_links">
+								<ul class="cr_list">
+									<li><a href="{% url 'frontend:about' %}">About</a></li>
+									<li><a href="{% url 'frontend:courses' %}">Courses</a></li>
+									<li><a href="{% url 'frontend:contact' %}">Help & Support</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+	</div>
+
+	<script src="{% static 'frontend/js/jquery-3.2.1.min.js' %}"></script>
+	<script src="{% static 'frontend/styles/bootstrap4/popper.js' %}"></script>
+	<script src="{% static 'frontend/styles/bootstrap4/bootstrap.min.js' %}"></script>
+	<script src="{% static 'frontend/plugins/easing/easing.js' %}"></script>
+	<script src="{% static 'frontend/plugins/parallax-js-master/parallax.min.js' %}"></script>
+	{% block extra_js %}{% endblock %}
+</body>
+
+</html>

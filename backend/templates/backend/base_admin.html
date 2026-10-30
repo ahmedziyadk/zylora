@@ -1,0 +1,516 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>{% block title %}Zylora Admin Portal{% endblock %}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/bootstrap4/bootstrap.min.css' %}">
+<link href="{% static 'frontend/plugins/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+	:root {
+		--sidebar-width: 260px;
+		--sidebar-bg: #0f172a;
+		--sidebar-hover: #1e293b;
+		--sidebar-active: #14bdee;
+		--primary: #14bdee;
+		--primary-dark: #0d96be;
+		--topbar-height: 68px;
+		--bg-main: #f1f5f9;
+		--card-bg: #ffffff;
+		--text-dark: #1e293b;
+		--text-muted: #64748b;
+	}
+	body {
+		font-family: 'Inter', sans-serif;
+		background-color: var(--bg-main);
+		color: var(--text-dark);
+		margin: 0;
+		overflow-x: hidden;
+	}
+	/* Sidebar */
+	.admin_sidebar {
+		width: var(--sidebar-width);
+		height: 100vh;
+		position: fixed;
+		top: 0;
+		left: 0;
+		background: var(--sidebar-bg);
+		color: #94a3b8;
+		z-index: 1000;
+		display: flex;
+		flex-direction: column;
+		transition: all 0.3s ease;
+		box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+	}
+	.sidebar_brand {
+		height: var(--topbar-height);
+		display: flex;
+		align-items: center;
+		padding: 0 24px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		background: #090e1a;
+	}
+	.sidebar_brand a {
+		font-size: 22px;
+		font-weight: 700;
+		color: #ffffff;
+		text-decoration: none;
+		letter-spacing: 0.5px;
+	}
+	.sidebar_brand a span {
+		color: var(--primary);
+	}
+	.sidebar_brand .badge_admin {
+		background: rgba(20, 189, 238, 0.15);
+		color: var(--primary);
+		font-size: 11px;
+		font-weight: 600;
+		padding: 3px 8px;
+		border-radius: 6px;
+		margin-left: 10px;
+		text-transform: uppercase;
+	}
+	.sidebar_menu {
+		list-style: none;
+		padding: 20px 14px;
+		margin: 0;
+		flex-grow: 1;
+		overflow-y: auto;
+	}
+	.menu_heading {
+		font-size: 11px;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: #475569;
+		letter-spacing: 0.8px;
+		padding: 10px 14px 6px 14px;
+	}
+	.sidebar_item {
+		margin-bottom: 4px;
+	}
+	.sidebar_link {
+		display: flex;
+		align-items: center;
+		padding: 11px 16px;
+		border-radius: 10px;
+		color: #94a3b8;
+		text-decoration: none;
+		font-size: 14px;
+		font-weight: 500;
+		transition: all 0.2s ease;
+	}
+	.sidebar_link i {
+		font-size: 17px;
+		width: 24px;
+		margin-right: 12px;
+		color: #64748b;
+		transition: color 0.2s ease;
+	}
+	.sidebar_link:hover {
+		background: var(--sidebar-hover);
+		color: #ffffff;
+		text-decoration: none;
+	}
+	.sidebar_link:hover i {
+		color: var(--primary);
+	}
+	.sidebar_link.active {
+		background: linear-gradient(90deg, rgba(20, 189, 238, 0.2) 0%, rgba(20, 189, 238, 0.05) 100%);
+		color: #ffffff;
+		font-weight: 600;
+		border-left: 3px solid var(--primary);
+	}
+	.sidebar_link.active i {
+		color: var(--primary);
+	}
+	.sidebar_badge {
+		margin-left: auto;
+		background: #ef4444;
+		color: #ffffff;
+		font-size: 11px;
+		font-weight: 700;
+		padding: 2px 7px;
+		border-radius: 10px;
+	}
+	.sidebar_footer {
+		padding: 16px 20px;
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+		background: #090e1a;
+	}
+	/* Topbar */
+	.admin_topbar {
+		height: var(--topbar-height);
+		position: fixed;
+		top: 0;
+		right: 0;
+		left: var(--sidebar-width);
+		background: #ffffff;
+		border-bottom: 1px solid #e2e8f0;
+		z-index: 999;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 32px;
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+		transition: left 0.3s ease;
+	}
+	.topbar_left {
+		display: flex;
+		align-items: center;
+	}
+	.topbar_left h1 {
+		font-size: 19px;
+		font-weight: 700;
+		color: var(--text-dark);
+		margin: 0;
+	}
+	.topbar_right {
+		display: flex;
+		align-items: center;
+	}
+	.topbar_btn {
+		background: #f1f5f9;
+		border: 1px solid #e2e8f0;
+		color: #475569;
+		padding: 8px 16px;
+		border-radius: 8px;
+		font-size: 13px;
+		font-weight: 600;
+		text-decoration: none;
+		margin-right: 15px;
+		transition: all 0.2s ease;
+		display: inline-flex;
+		align-items: center;
+	}
+	.topbar_btn:hover {
+		background: #e2e8f0;
+		color: var(--text-dark);
+		text-decoration: none;
+	}
+	.topbar_btn i {
+		margin-right: 6px;
+	}
+	.admin_user_pill {
+		display: flex;
+		align-items: center;
+		padding: 6px 12px;
+		background: #f8fafc;
+		border: 1px solid #e2e8f0;
+		border-radius: 20px;
+	}
+	.admin_avatar {
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		background: var(--primary);
+		color: #ffffff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 14px;
+		font-weight: 700;
+		margin-right: 10px;
+	}
+	.admin_user_name {
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--text-dark);
+		margin-right: 10px;
+	}
+	/* Main Content */
+	.admin_main {
+		margin-left: var(--sidebar-width);
+		padding: calc(var(--topbar-height) + 28px) 32px 50px 32px;
+		min-height: 100vh;
+		transition: margin-left 0.3s ease;
+	}
+	/* Reusable Card */
+	.dash_panel {
+		background: var(--card-bg);
+		border-radius: 14px;
+		border: 1px solid #e2e8f0;
+		box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+		padding: 24px;
+		margin-bottom: 28px;
+	}
+	.dash_panel_header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 20px;
+		padding-bottom: 14px;
+		border-bottom: 1px solid #f1f5f9;
+	}
+	.dash_panel_title {
+		font-size: 17px;
+		font-weight: 700;
+		color: var(--text-dark);
+		margin: 0;
+		display: flex;
+		align-items: center;
+	}
+	.dash_panel_title i {
+		color: var(--primary);
+		margin-right: 10px;
+	}
+	/* Stat Widget */
+	.widget_card {
+		background: #ffffff;
+		border-radius: 14px;
+		border: 1px solid #e2e8f0;
+		padding: 22px;
+		box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+		display: flex;
+		align-items: center;
+		margin-bottom: 24px;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+	.widget_card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 24px rgba(20, 189, 238, 0.1);
+	}
+	.widget_icon {
+		width: 54px;
+		height: 54px;
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 22px;
+		margin-right: 18px;
+		flex-shrink: 0;
+	}
+	.widget_value {
+		font-size: 26px;
+		font-weight: 700;
+		color: var(--text-dark);
+		line-height: 1.1;
+	}
+	.widget_title {
+		font-size: 13px;
+		color: var(--text-muted);
+		margin-top: 4px;
+		font-weight: 500;
+	}
+	/* Tables */
+	.custom_table {
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
+	}
+	.custom_table th {
+		background: #f8fafc;
+		color: #475569;
+		font-size: 12px;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.6px;
+		padding: 12px 16px;
+		border-top: 1px solid #e2e8f0;
+		border-bottom: 1px solid #e2e8f0;
+	}
+	.custom_table td {
+		padding: 14px 16px;
+		font-size: 14px;
+		color: #334155;
+		border-bottom: 1px solid #f1f5f9;
+		vertical-align: middle;
+	}
+	.custom_table tr:hover td {
+		background-color: #f8fafc;
+	}
+	.btn_action_sm {
+		padding: 5px 10px;
+		font-size: 12px;
+		font-weight: 600;
+		border-radius: 6px;
+		margin-right: 4px;
+		display: inline-flex;
+		align-items: center;
+		text-decoration: none;
+		border: 1px solid transparent;
+		transition: all 0.2s ease;
+	}
+	.btn_action_sm i {
+		margin-right: 4px;
+	}
+	.btn_action_edit {
+		background: #e0f2fe;
+		color: #0369a1;
+	}
+	.btn_action_edit:hover {
+		background: #bae6fd;
+		color: #0369a1;
+		text-decoration: none;
+	}
+	.btn_action_delete {
+		background: #fee2e2;
+		color: #b91c1c;
+	}
+	.btn_action_delete:hover {
+		background: #fecaca;
+		color: #b91c1c;
+		text-decoration: none;
+	}
+	.btn_action_toggle {
+		background: #fef3c7;
+		color: #b45309;
+	}
+	.btn_action_toggle:hover {
+		background: #fde68a;
+		color: #b45309;
+		text-decoration: none;
+	}
+	/* Primary Action Button */
+	.btn_admin_primary {
+		background: linear-gradient(135deg, #14bdee 0%, #0d96be 100%);
+		color: #ffffff;
+		border: none;
+		padding: 9px 20px;
+		border-radius: 8px;
+		font-size: 13px;
+		font-weight: 600;
+		display: inline-flex;
+		align-items: center;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		box-shadow: 0 4px 12px rgba(20, 189, 238, 0.25);
+		text-decoration: none;
+	}
+	.btn_admin_primary:hover {
+		background: linear-gradient(135deg, #0d96be 0%, #0a7a9b 100%);
+		color: #ffffff;
+		text-decoration: none;
+		transform: translateY(-1px);
+	}
+	.btn_admin_primary i {
+		margin-right: 7px;
+	}
+</style>
+{% block extra_admin_css %}{% endblock %}
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="admin_sidebar">
+	<div class="sidebar_brand">
+		<a href="{% url 'backend:dashboard' %}">Zy<span>lora</span></a>
+		<span class="badge_admin">{% if request.user.is_superuser %}Admin{% else %}Instructor{% endif %}</span>
+	</div>
+
+	<ul class="sidebar_menu">
+		<div class="menu_heading">Core Management</div>
+		<li class="sidebar_item">
+			<a href="{% url 'backend:dashboard' %}" class="sidebar_link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+				<i class="fa fa-dashboard"></i> Overview
+			</a>
+		</li>
+		{% if request.user.is_superuser %}
+		<li class="sidebar_item">
+			<a href="{% url 'backend:instructors_list' %}" class="sidebar_link {% if request.resolver_match.url_name in 'instructors_list,instructor_create' %}active{% endif %}">
+				<i class="fa fa-user-circle"></i> Instructors
+			</a>
+		</li>
+		{% endif %}
+		<li class="sidebar_item">
+			<a href="{% url 'backend:students_list' %}" class="sidebar_link {% if request.resolver_match.url_name in 'students_list,student_edit' %}active{% endif %}">
+				<i class="fa fa-users"></i> Students
+			</a>
+		</li>
+		<li class="sidebar_item">
+			<a href="{% url 'backend:courses_list' %}" class="sidebar_link {% if request.resolver_match.url_name in 'courses_list,course_create,course_edit,course_lessons,lesson_create,lesson_edit' %}active{% endif %}">
+				<i class="fa fa-book"></i> Courses
+			</a>
+		</li>
+		<li class="sidebar_item">
+			<a href="{% url 'backend:categories_list' %}" class="sidebar_link {% if request.resolver_match.url_name in 'categories_list,category_create,category_edit' %}active{% endif %}">
+				<i class="fa fa-th-large"></i> Categories
+			</a>
+		</li>
+		<li class="sidebar_item">
+			<a href="{% url 'backend:enrollments_list' %}" class="sidebar_link {% if request.resolver_match.url_name in 'enrollments_list,enrollment_detail' %}active{% endif %}">
+				<i class="fa fa-graduation-cap"></i> Enrollments
+			</a>
+		</li>
+		<li class="sidebar_item">
+			<a href="{% url 'backend:reviews_list' %}" class="sidebar_link {% if request.resolver_match.url_name == 'reviews_list' %}active{% endif %}">
+				<i class="fa fa-star text-warning"></i> Reviews
+			</a>
+		</li>
+
+		<div class="menu_heading">Communications</div>
+		<li class="sidebar_item">
+			<a href="{% url 'backend:messages_list' %}" class="sidebar_link {% if request.resolver_match.url_name == 'messages_list' %}active{% endif %}">
+				<i class="fa fa-envelope-o"></i> Inquiries
+			</a>
+		</li>
+
+		<div class="menu_heading">External Links</div>
+		<li class="sidebar_item">
+			<a href="{% url 'frontend:index' %}" target="_blank" class="sidebar_link">
+				<i class="fa fa-globe"></i> View Website <i class="fa fa-external-link ml-auto" style="font-size: 11px;"></i>
+			</a>
+		</li>
+		<li class="sidebar_item">
+			<a href="/admin/" target="_blank" class="sidebar_link">
+				<i class="fa fa-cogs"></i> Django Admin <i class="fa fa-external-link ml-auto" style="font-size: 11px;"></i>
+			</a>
+		</li>
+	</ul>
+
+	<div class="sidebar_footer">
+		<a href="{% url 'backend:admin_logout' %}" style="color: #ef4444; font-size: 13px; font-weight: 600; text-decoration: none; display: flex; align-items: center;">
+			<i class="fa fa-sign-out mr-2"></i> Sign Out of Admin
+		</a>
+	</div>
+</aside>
+
+<!-- Topbar -->
+<header class="admin_topbar">
+	<div class="topbar_left">
+		<h1>{% block page_title %}Admin Dashboard{% endblock %}</h1>
+	</div>
+
+	<div class="topbar_right">
+		<a href="{% url 'backend:course_create' %}" class="btn_admin_primary mr-3">
+			<i class="fa fa-plus"></i> New Course
+		</a>
+		<div class="admin_user_pill">
+			<div class="admin_avatar">
+				{{ request.user.first_name|first|default:request.user.username|first|upper }}
+			</div>
+			<div class="admin_user_name">
+				{{ request.user.get_full_name|default:request.user.username }}
+			</div>
+		</div>
+	</div>
+</header>
+
+<!-- Main Area -->
+<main class="admin_main">
+	<!-- Flash Messages -->
+	{% if messages %}
+	<div class="mb-4">
+		{% for message in messages %}
+		<div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show shadow-sm" role="alert" style="border-radius: 10px;">
+			{% if message.tags == 'success' %}<i class="fa fa-check-circle mr-2"></i>{% elif message.tags == 'error' %}<i class="fa fa-exclamation-circle mr-2"></i>{% else %}<i class="fa fa-info-circle mr-2"></i>{% endif %}
+			{{ message }}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		{% endfor %}
+	</div>
+	{% endif %}
+
+	{% block admin_content %}{% endblock %}
+</main>
+
+<script src="{% static 'frontend/js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'frontend/styles/bootstrap4/popper.js' %}"></script>
+<script src="{% static 'frontend/styles/bootstrap4/bootstrap.min.js' %}"></script>
+{% block extra_admin_js %}{% endblock %}
+</body>
+</html>

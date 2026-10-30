@@ -1,0 +1,272 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block title %}Login - Zylora{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/contact.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'frontend/styles/contact_responsive.css' %}">
+<style>
+	.auth_section {
+		padding: 70px 0 100px 0;
+		background: #f8fafc;
+	}
+	.auth_card {
+		background: #ffffff;
+		border-radius: 16px;
+		box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+		padding: 45px 40px;
+		max-width: 490px;
+		margin: 0 auto;
+		border: 1px solid #eef2f6;
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+	.auth_card:hover {
+		box-shadow: 0 20px 40px rgba(20, 189, 238, 0.12);
+	}
+	.auth_icon_wrapper {
+		width: 70px;
+		height: 70px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #14bdee 0%, #0d96be 100%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto 16px auto;
+		color: #ffffff;
+		font-size: 28px;
+		box-shadow: 0 8px 20px rgba(20, 189, 238, 0.3);
+	}
+	.auth_title {
+		font-family: 'Roboto Slab', serif;
+		font-size: 28px;
+		color: #1e1e1e;
+		font-weight: 700;
+		margin-bottom: 6px;
+		text-align: center;
+	}
+	.auth_subtitle {
+		font-size: 14px;
+		color: #717171;
+		margin-bottom: 24px;
+		text-align: center;
+	}
+	.form_group_custom {
+		margin-bottom: 22px;
+		position: relative;
+	}
+	.form_group_custom label {
+		font-size: 13px;
+		font-weight: 600;
+		color: #384158;
+		margin-bottom: 8px;
+		display: block;
+	}
+	.input_with_icon {
+		position: relative;
+	}
+	.input_with_icon > i {
+		position: absolute;
+		left: 16px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: #94a3b8;
+		font-size: 16px;
+		pointer-events: none;
+	}
+	.input_with_icon input {
+		width: 100%;
+		height: 50px;
+		padding: 0 45px 0 45px;
+		background: #f8fafc;
+		border: 1.5px solid #e2e8f0;
+		border-radius: 10px;
+		font-size: 14px;
+		color: #1e293b;
+		transition: all 0.2s ease;
+	}
+	.input_with_icon input:focus {
+		background: #ffffff;
+		border-color: #14bdee;
+		outline: none;
+		box-shadow: 0 0 0 3px rgba(20, 189, 238, 0.15);
+	}
+	.password_toggle_btn {
+		position: absolute;
+		right: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+		background: transparent;
+		border: none;
+		color: #94a3b8;
+		cursor: pointer;
+		padding: 6px 8px;
+		font-size: 15px;
+		transition: color 0.2s ease;
+		outline: none;
+	}
+	.password_toggle_btn:hover {
+		color: #14bdee;
+	}
+	.password_toggle_btn:focus {
+		outline: none;
+	}
+	.auth_btn {
+		width: 100%;
+		height: 52px;
+		background: linear-gradient(135deg, #14bdee 0%, #0d96be 100%);
+		border: none;
+		border-radius: 10px;
+		color: #ffffff;
+		font-size: 16px;
+		font-weight: 600;
+		letter-spacing: 0.5px;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		box-shadow: 0 8px 20px rgba(20, 189, 238, 0.25);
+		margin-top: 10px;
+	}
+	.auth_btn:hover {
+		background: linear-gradient(135deg, #0d96be 0%, #0a7a9b 100%);
+		box-shadow: 0 10px 25px rgba(20, 189, 238, 0.35);
+		transform: translateY(-1px);
+	}
+	.auth_footer_link {
+		margin-top: 25px;
+		text-align: center;
+		font-size: 14px;
+		color: #64748b;
+	}
+	.auth_footer_link a {
+		color: #14bdee;
+		font-weight: 600;
+		transition: color 0.2s ease;
+	}
+	.auth_footer_link a:hover {
+		color: #0d96be;
+		text-decoration: underline;
+	}
+	.field_error {
+		color: #ef4444;
+		font-size: 12px;
+		margin-top: 5px;
+	}
+	.role_badge_container {
+		text-align: center;
+		margin-bottom: 18px;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumbs -->
+<div class="home">
+	<div class="breadcrumbs_container">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="breadcrumbs">
+						<ul>
+							<li><a href="{% url 'frontend:index' %}">Home</a></li>
+							<li>Login</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>			
+</div>
+
+<!-- Login Form Section -->
+<div class="auth_section">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="auth_card">
+					<div class="auth_icon_wrapper">
+						<i class="fa fa-lock"></i>
+					</div>
+					<h2 class="auth_title">Welcome to Zylora</h2>
+					<p class="auth_subtitle">Sign in to access your student courses or administrative dashboard</p>
+
+					<div class="role_badge_container">
+						<span class="badge badge-light border text-muted px-3 py-2" style="font-size: 12px; border-radius: 20px;">
+							<i class="fa fa-shield text-info mr-1"></i> Unified Portal for Students &amp; Administrators
+						</span>
+					</div>
+
+					<form method="post" action="{% url 'frontend:login' %}" id="loginForm">
+						{% csrf_token %}
+						{% if request.GET.next %}
+						<input type="hidden" name="next" value="{{ request.GET.next }}">
+						{% endif %}
+
+						<div class="form_group_custom">
+							<label for="id_username">Username or Email Address</label>
+							<div class="input_with_icon">
+								<i class="fa fa-user"></i>
+								{{ form.username }}
+							</div>
+							{% if form.username.errors %}
+							<div class="field_error">{{ form.username.errors.0 }}</div>
+							{% endif %}
+						</div>
+
+						<div class="form_group_custom">
+							<div class="d-flex justify-content-between align-items-center mb-1">
+								<label for="id_password" class="mb-0">Password</label>
+								<a href="{% url 'frontend:password_reset' %}" style="font-size: 12px; color: #14bdee;">Forgot password?</a>
+							</div>
+							<div class="input_with_icon">
+								<i class="fa fa-lock"></i>
+								{{ form.password }}
+								<button type="button" id="togglePasswordBtn" class="password_toggle_btn" title="Show or hide password" aria-label="Toggle password visibility">
+									<i class="fa fa-eye" id="togglePasswordIcon"></i>
+								</button>
+							</div>
+							{% if form.password.errors %}
+							<div class="field_error">{{ form.password.errors.0 }}</div>
+							{% endif %}
+						</div>
+
+						<button type="submit" class="auth_btn" id="loginSubmitBtn">
+							<i class="fa fa-sign-in mr-2"></i> Login
+						</button>
+					</form>
+
+					<div class="auth_footer_link">
+						Don't have an account? <a href="{% url 'frontend:register' %}">Register as a Student</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	var toggleBtn = document.getElementById('togglePasswordBtn');
+	var passwordInput = document.getElementById('id_password');
+	var toggleIcon = document.getElementById('togglePasswordIcon');
+
+	if (toggleBtn && passwordInput && toggleIcon) {
+		toggleBtn.addEventListener('click', function(e) {
+			e.preventDefault();
+			if (passwordInput.type === 'password') {
+				passwordInput.type = 'text';
+				toggleIcon.classList.remove('fa-eye');
+				toggleIcon.classList.add('fa-eye-slash');
+				toggleBtn.setAttribute('title', 'Hide password');
+			} else {
+				passwordInput.type = 'password';
+				toggleIcon.classList.remove('fa-eye-slash');
+				toggleIcon.classList.add('fa-eye');
+				toggleBtn.setAttribute('title', 'Show password');
+			}
+		});
+	}
+});
+</script>
+{% endblock %}

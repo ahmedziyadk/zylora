@@ -1,0 +1,101 @@
+{% extends 'backend/base_admin.html' %}
+
+{% block title %}Manage Reviews - Zylora Admin{% endblock %}
+{% block page_title %}Student Feedback & Course Reviews{% endblock %}
+
+{% block admin_content %}
+<div class="dash_panel">
+	<div class="dash_panel_header">
+		<div>
+			<h3 class="dash_panel_title"><i class="fa fa-star text-warning"></i> Course Reviews & Ratings</h3>
+			<span class="small text-muted">{{ total_count }} student review{{ total_count|pluralize }} received</span>
+		</div>
+
+		<!-- Filters -->
+		<form method="get" action="{% url 'backend:reviews_list' %}" class="form-inline">
+			<select name="course" class="form-control form-control-sm mr-2 custom-select" onchange="this.form.submit()">
+				<option value="">All Courses</option>
+				{% for c in courses %}
+				<option value="{{ c.id }}" {% if selected_course == c.id|stringformat:"s" %}selected{% endif %}>{{ c.title|truncatechars:28 }}</option>
+				{% endfor %}
+			</select>
+
+			<select name="rating" class="form-control form-control-sm mr-2 custom-select" onchange="this.form.submit()">
+				<option value="">All Ratings</option>
+				<option value="5" {% if selected_rating == '5' %}selected{% endif %}>5 Stars (Outstanding)</option>
+				<option value="4" {% if selected_rating == '4' %}selected{% endif %}>4 Stars (Very Good)</option>
+				<option value="3" {% if selected_rating == '3' %}selected{% endif %}>3 Stars (Good)</option>
+				<option value="2" {% if selected_rating == '2' %}selected{% endif %}>2 Stars (Fair)</option>
+				<option value="1" {% if selected_rating == '1' %}selected{% endif %}>1 Star (Poor)</option>
+			</select>
+
+			{% if selected_course or selected_rating %}
+			<a href="{% url 'backend:reviews_list' %}" class="btn btn-outline-danger btn-sm" title="Clear filters"><i class="fa fa-times"></i></a>
+			{% endif %}
+		</form>
+	</div>
+
+	<div class="table-responsive">
+		<table class="custom_table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Course</th>
+					<th>Student</th>
+					<th>Rating</th>
+					<th>Review Comment</th>
+					<th>Date</th>
+					<th class="text-right">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for rev in reviews %}
+				<tr>
+					<td>{{ forloop.counter }}</td>
+					<td>
+						<strong style="color: #0f172a;">{{ rev.course.title }}</strong>
+						<div class="small text-muted">{{ rev.course.category.name|default:"General" }}</div>
+					</td>
+					<td>
+						<div style="font-weight: 600; color: #1e293b;">
+							{{ rev.student.get_full_name|default:rev.student.username }}
+						</div>
+						<div class="small text-muted">@{{ rev.student.username }}</div>
+					</td>
+					<td>
+						<span class="text-warning font-weight-bold">
+							{% for i in "12345" %}
+								{% if forloop.counter <= rev.rating %}
+								<i class="fa fa-star"></i>
+								{% else %}
+								<i class="fa fa-star-o text-muted"></i>
+								{% endif %}
+							{% endfor %}
+							<span class="text-dark ml-1">{{ rev.rating }}.0</span>
+						</span>
+					</td>
+					<td style="max-width: 320px;">
+						<div class="text-muted small" style="line-height: 1.5;">
+							{{ rev.comment }}
+						</div>
+					</td>
+					<td>{{ rev.created_at|date:"M d, Y" }}</td>
+					<td class="text-right">
+						<a href="{% url 'backend:review_delete' rev.id %}" class="btn_action_sm btn_action_delete" title="Delete Review">
+							<i class="fa fa-trash"></i> Delete
+						</a>
+					</td>
+				</tr>
+				{% empty %}
+				<tr>
+					<td colspan="7" class="text-center text-muted py-5">
+						<i class="fa fa-star-o fa-2x mb-3 text-muted"></i>
+						<div>No course reviews found.</div>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

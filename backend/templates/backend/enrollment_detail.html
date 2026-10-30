@@ -1,0 +1,99 @@
+{% extends 'backend/base_admin.html' %}
+
+{% block title %}Learning Progress: {{ student.username }} - Zylora Admin{% endblock %}
+{% block page_title %}Student Learning Progress{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+	<div class="col-lg-10 mx-auto">
+		<!-- Summary Card -->
+		<div class="dash_panel mb-4">
+			<div class="dash_panel_header">
+				<div>
+					<h3 class="dash_panel_title"><i class="fa fa-graduation-cap"></i> {{ student.get_full_name|default:student.username }} &bull; {{ course.title }}</h3>
+					<span class="small text-muted">Enrolled on {{ enrollment.enrolled_at|date:"M d, Y" }} &bull; Status: <strong>{{ enrollment.status }}</strong></span>
+				</div>
+				<a href="{% url 'backend:enrollments_list' %}" class="btn btn-outline-secondary btn-sm">
+					<i class="fa fa-arrow-left mr-1"></i> Back to Enrollments
+				</a>
+			</div>
+
+			<div class="row p-3 align-items-center">
+				<div class="col-md-4 text-center border-right">
+					<div class="display-4 font-weight-bold {% if enrollment.progress == 100 %}text-success{% else %}text-info{% endif %}">
+						{{ enrollment.progress }}%
+					</div>
+					<div class="small text-muted text-uppercase font-weight-bold">Course Completion Rate</div>
+				</div>
+				<div class="col-md-8 pl-md-4">
+					<div class="progress mb-3" style="height: 12px; border-radius: 6px;">
+						<div class="progress-bar {% if enrollment.progress == 100 %}bg-success{% else %}bg-info{% endif %}" style="width: {{ enrollment.progress }}%;"></div>
+					</div>
+					<div class="d-flex justify-content-between small text-muted">
+						<span>Student: <strong>@{{ student.username }}</strong> ({{ student.email|default:"No email" }})</span>
+						<span>Course: <strong>{{ course.title }}</strong> ({{ lessons_with_status|length }} lessons)</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Lesson Progress Table -->
+		<div class="dash_panel">
+			<div class="dash_panel_header">
+				<h4 class="dash_panel_title" style="font-size: 16px;"><i class="fa fa-list-ol"></i> Lesson-by-Lesson Progress Checklist</h4>
+			</div>
+
+			<div class="table-responsive">
+				<table class="custom_table">
+					<thead>
+						<tr>
+							<th style="width: 70px;">Order</th>
+							<th>Lesson Title</th>
+							<th>Duration</th>
+							<th>Type</th>
+							<th>Completion Status</th>
+							<th>Completed At</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in lessons_with_status %}
+						<tr>
+							<td><span class="badge badge-light border font-weight-bold">#{{ item.lesson.order }}</span></td>
+							<td>
+								<strong style="color: #1e293b;">{{ item.lesson.title }}</strong>
+							</td>
+							<td>{{ item.lesson.duration_minutes }} mins</td>
+							<td>
+								{% if item.lesson.video_url %}
+								<span class="badge badge-info px-2 py-1"><i class="fa fa-video-camera mr-1"></i> Video</span>
+								{% else %}
+								<span class="badge badge-light border px-2 py-1"><i class="fa fa-file-text-o mr-1"></i> Text</span>
+								{% endif %}
+							</td>
+							<td>
+								{% if item.is_completed %}
+								<span class="badge badge-success px-2 py-1"><i class="fa fa-check-circle mr-1"></i> Completed</span>
+								{% else %}
+								<span class="badge badge-secondary px-2 py-1"><i class="fa fa-clock-o mr-1"></i> Incomplete</span>
+								{% endif %}
+							</td>
+							<td>
+								{% if item.completed_at %}
+								<span class="small text-muted">{{ item.completed_at|date:"M d, Y H:i" }}</span>
+								{% else %}
+								<span class="small text-muted font-italic">-</span>
+								{% endif %}
+							</td>
+						</tr>
+						{% empty %}
+						<tr>
+							<td colspan="6" class="text-center text-muted py-4">No lessons found in this course.</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
